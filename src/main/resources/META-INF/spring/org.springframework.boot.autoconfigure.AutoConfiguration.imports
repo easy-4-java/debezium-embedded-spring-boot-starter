@@ -1,0 +1,2 @@
+io.debezium.embedded.spring.boot.DebeziumEmbeddedAutoConfiguration
+io.debezium.embedded.spring.boot.DebeziumThreadPoolAutoConfiguration

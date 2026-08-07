@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.debezium.embedded.spring.boot.DebeziumEmbeddedAutoConfiguration,\
+io.debezium.embedded.spring.boot.DebeziumThreadPoolAutoConfiguration

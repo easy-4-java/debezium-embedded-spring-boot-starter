@@ -21,7 +21,7 @@
 
 ---
 
-> **Current Version**：`1.0.x.20260630-SNAPSHOT`<br>
+> **Current Version**：`4.0.x.20251227-SNAPSHOT`<br>
 > **JDK Baseline**：`17`<br>
 > **Group ID**：`io.github.easy4j`<br>
 > **Artifact ID**：`debezium-embedded-spring-boot-starter`<br>
@@ -37,7 +37,7 @@
 | Consumers | Spring Boot applications using debezium-embedded |
 | Core Capabilities | auto-configuration, property binding, ready-to-use beans for debezium-embedded |
 | JDK | `17` |
-| Coordinates | `io.github.easy4j:debezium-embedded-spring-boot-starter:1.0.x.20260630-SNAPSHOT` |
+| Coordinates | `io.github.easy4j:debezium-embedded-spring-boot-starter:4.0.x.20251227-SNAPSHOT` |
 | Config Prefix | `debezium.embedded` |
 
 ## 2. Core Capabilities
@@ -45,15 +45,15 @@
 | Capability | Status | Description |
 |---|:---:|---|
 | Auto-configuration | ✅ Stable | Registers debezium-embedded beans automatically |
-| Property Binding | ✅ Stable | Binds `debezium.embedded.*` to `Properties` |
-| Ready-to-use beans | ✅ Stable | Auto-registered via auto-configuration |
+| Property Binding | ✅ Stable | Binds `debezium.embedded.*` to `DebeziumAsyncEngineProperties` |
+| `CompletionCallback` bean | ✅ Stable | Auto-registered via DebeziumEmbeddedAutoConfiguration, DebeziumThreadPoolAutoConfiguration |
 
 ## 3. Requirements and Compatibility
 
 | Dependency | Minimum | Evidence |
 |---|---:|---|
 | JDK | `17` | `pom.xml` |
-| Spring Boot | `3.x` | `pom.xml` parent |
+| Spring Boot | `4.0.1` | `pom.xml` parent |
 | Maven | `3.6+` | Maven Enforcer |
 
 ## 4. Auto-configuration
@@ -62,7 +62,11 @@ The starter auto-configures the following beans:
 
 | Bean | Condition | Missing Behavior |
 |---|---|---|
-| `Object` | classpath + property | not created |
+| `CompletionCallback` | classpath + property | not created |
+| `ChangeEventHandler` | classpath + property | not created |
+| `RecordChangeEventHandler` | classpath + property | not created |
+| `DebeziumEmbeddedClient` | classpath + property | not created |
+| `ThreadPoolTaskExecutor` | classpath + property | not created |
 
 Auto-configuration registration:
 
@@ -75,7 +79,7 @@ Auto-configuration registration:
 <dependency>
     <groupId>io.github.easy4j</groupId>
     <artifactId>debezium-embedded-spring-boot-starter</artifactId>
-    <version>1.0.x.20260630-SNAPSHOT</version>
+    <version>4.0.x.20251227-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -109,7 +113,7 @@ Then inject the auto-configured bean in your code:
 
 ```java
 @Autowired
-private Object bean;
+private CompletionCallback completionCallback;
 ```
 
 ## 7. Configuration Reference

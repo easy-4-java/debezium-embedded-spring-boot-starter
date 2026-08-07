@@ -1,0 +1,68 @@
+#########################################################################################################################################################
+### Debezium 基本配置：
+#########################################################################################################################################################
+debezium:
+  # Debezium 异步消费线程池配置
+  thread-pool:
+    # 线程池核心线程数。默认为 1
+    core-pool-size: 1
+    # 线程池最大线程数。默认为 1
+    max-pool-size: 1
+    # 线程池队列容量。默认为 1000
+    queue-capacity: 1000
+    # 线程池线程存活时间。默认为 60s
+    keep-alive: 60s
+  # Debezium Embedded 实例配置
+  instances:
+    # ========================================
+    # MySQL 连接器配置
+    # ========================================
+    - event-type: change_event
+      # 连接器配置
+      connector:
+        # 连接器名称
+        destination: mysql-connector
+        # 连接器类型
+        type: MYSQL
+        # MySQL 主机地址
+        host: 127.0.0.1
+        # MySQL 端口
+        port: 3306
+        # 数据库和表过滤
+        database-include-list:
+          - test
+        table-include-list:
+          - test.user
+      # 数据库历史记录
+      schema-history:
+        type: redis
+        redis:
+          address: 121.41.2.18:16379
+          password: hpkRzkC7pcDnYp3e
+      # 偏移量存储配置
+      offset-storage:
+        type: redis
+        redis:
+          address: 121.41.2.18:16379
+          password: hpkRzkC7pcDnYp3e
+    # ========================================
+    # MongoDB 连接器配置
+    # ========================================
+    - connector:
+        # 连接器名称
+        destination: mongodb-connector
+        # Debezium Server 主机地址。如果设置了address属性，则忽略。
+        host: 127.0.0.1
+        # Debezium Server 端口。如果设置了address属性，则忽略。默认为 5672
+        port: 3306
+        # Debezium Server 用户名
+        username: xxx
+        # Debezium Server 密码
+        password: 222
+      # 偏移量存储配置
+      offset-storage:
+        type: file
+        file:
+          file-name: /tmp/debezium-offsets.dat
+          flush-interval-ms: 60000
+          flush-timeout-ms: 5000

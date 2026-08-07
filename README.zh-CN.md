@@ -21,7 +21,7 @@
 
 ---
 
-> **当前版本**：`1.0.x.20260630-SNAPSHOT`<br>
+> **当前版本**：`4.0.x.20251227-SNAPSHOT`<br>
 > **JDK 基线**：`17`<br>
 > **Group ID**：`io.github.easy4j`<br>
 > **Artifact ID**：`debezium-embedded-spring-boot-starter`<br>
@@ -37,7 +37,7 @@
 | 消费方 | 使用 debezium-embedded 的 Spring Boot 应用 |
 | 核心能力 | 自动装配、属性绑定、开箱即用的 debezium-embedded Bean |
 | JDK | `17` |
-| 坐标 | `io.github.easy4j:debezium-embedded-spring-boot-starter:1.0.x.20260630-SNAPSHOT` |
+| 坐标 | `io.github.easy4j:debezium-embedded-spring-boot-starter:4.0.x.20251227-SNAPSHOT` |
 | 配置前缀 | `debezium.embedded` |
 
 ## 2. 核心能力
@@ -45,15 +45,15 @@
 | 能力 | 状态 | 说明 |
 |---|:---:|---|
 | 自动装配 | ✅ 稳定 | 自动注册 debezium-embedded 相关 Bean |
-| 属性绑定 | ✅ 稳定 | 绑定 `debezium.embedded.*` 到 `Properties` |
-| 开箱即用的 Bean | ✅ 稳定 | 通过 自动装配 自动注册 |
+| 属性绑定 | ✅ 稳定 | 绑定 `debezium.embedded.*` 到 `DebeziumAsyncEngineProperties` |
+| `CompletionCallback` Bean | ✅ 稳定 | 通过 DebeziumEmbeddedAutoConfiguration, DebeziumThreadPoolAutoConfiguration 自动注册 |
 
 ## 3. 运行要求与兼容性
 
 | 依赖 | 最低版本 | 证据来源 |
 |---|---:|---|
 | JDK | `17` | `pom.xml` |
-| Spring Boot | `3.x` | `pom.xml` parent |
+| Spring Boot | `4.0.1` | `pom.xml` parent |
 | Maven | `3.6+` | Maven Enforcer |
 
 ## 4. 自动装配
@@ -62,7 +62,11 @@ Starter 自动装配以下 Bean：
 
 | Bean | 条件 | 缺失时行为 |
 |---|---|---|
-| `Object` | classpath + property | 不创建 |
+| `CompletionCallback` | classpath + property | 不创建 |
+| `ChangeEventHandler` | classpath + property | 不创建 |
+| `RecordChangeEventHandler` | classpath + property | 不创建 |
+| `DebeziumEmbeddedClient` | classpath + property | 不创建 |
+| `ThreadPoolTaskExecutor` | classpath + property | 不创建 |
 
 自动装配注册：
 
@@ -75,7 +79,7 @@ Starter 自动装配以下 Bean：
 <dependency>
     <groupId>io.github.easy4j</groupId>
     <artifactId>debezium-embedded-spring-boot-starter</artifactId>
-    <version>1.0.x.20260630-SNAPSHOT</version>
+    <version>4.0.x.20251227-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -109,7 +113,7 @@ public class Application {
 
 ```java
 @Autowired
-private Object bean;
+private CompletionCallback completionCallback;
 ```
 
 ## 7. 配置参考
