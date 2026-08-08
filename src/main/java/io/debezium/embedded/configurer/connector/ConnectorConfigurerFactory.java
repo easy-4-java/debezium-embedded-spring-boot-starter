@@ -3,16 +3,21 @@ package io.debezium.embedded.configurer.connector;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 
 /**
- * 连接器配置器工厂。
- * 根据配置的连接器类型返回相应的配置器实现。
+ * Factory that resolves the {@link ConnectorConfigurer} implementation matching
+ * the connector type declared on the supplied properties.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class ConnectorConfigurerFactory {
 
     /**
-     * 根据配置的连接器类型返回相应的配置器实现。
+     * Returns the {@link ConnectorConfigurer} for the connector type carried by
+     * {@code properties}.
      *
-     * @param properties 连接器配置属性
-     * @return 连接器配置器
+     * @param properties the connector configuration properties
+     * @return the matching connector configurer
+     * @throws IllegalArgumentException if the connector type is not supported
      */
     public static ConnectorConfigurer from(DebeziumConnectorProperties properties) {
         switch (properties.getType()) {

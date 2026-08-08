@@ -7,9 +7,12 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * 删除操作监听器 当删除数据库的记录时 添加该注解的方法会被调用
+ * Listener for {@link DebeziumEntry.EventType#DELETE} events.
+ * <p>Methods annotated with this are invoked when a record is deleted from
+ * the matching table.</p>
  *
- * @author lujun
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 
 @Target({ElementType.METHOD})
@@ -19,25 +22,26 @@ import java.lang.annotation.*;
 public @interface OnDeleteEvent {
 
     /**
-     * debezium 指令
-     * default for all
-     * @return debezium destination
+     * Connector destination name. Defaults to empty, meaning any destination.
+     *
+     * @return the destination name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String destination() default "";
 
 
     /**
-     * 数据库实例
-     * @return 数据库实例
+     * Database schema name to match.
+     *
+     * @return the schema name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String schema();
 
     /**
-     * 监听的表
-     * default for all
-     * @return 监听的表
+     * Table name to listen on. Defaults to any table.
+     *
+     * @return the table name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String table();

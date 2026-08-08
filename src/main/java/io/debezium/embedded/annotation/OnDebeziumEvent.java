@@ -6,9 +6,12 @@ import io.debezium.embedded.protocol.DebeziumEntry;
 import java.lang.annotation.*;
 
 /**
- * 监听数据库的操作
+ * Marks an annotated method or class as a listener for Debezium change events.
+ * <p>The destination, schema, table and event type selectors can be combined
+ * to narrow the set of events the listener accepts.</p>
  *
- * @author lujun
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 
 @Target({ElementType.TYPE})
@@ -17,30 +20,30 @@ import java.lang.annotation.*;
 public @interface OnDebeziumEvent {
 
     /**
-     * debezium 指令
-     * default for all
-     * @return destination name
+     * Connector destination name. Defaults to empty, meaning any destination.
+     *
+     * @return the destination name
      */
     String destination() default "";
 
     /**
-     * 数据库实例
-     * default for all
-     * @return schema name
+     * Database schema name. Defaults to {@code *}, meaning any schema.
+     *
+     * @return the schema name
      */
     String schema() default "*";
 
     /**
-     * 监听的表
-     * default for all
-     * @return table name
+     * Table name to listen on. Defaults to {@code *}, meaning any table.
+     *
+     * @return the table name
      */
     String table() default "*";
 
     /**
-     * 监听操作的类型
-     * default for all\
-     * @return DebeziumEntry.EventType
+     * Event types the listener accepts. Defaults to none, meaning all event types.
+     *
+     * @return the accepted {@link DebeziumEntry.EventType}s
      */
     DebeziumEntry.EventType[] eventType();
 

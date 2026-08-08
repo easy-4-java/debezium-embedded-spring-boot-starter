@@ -3,11 +3,22 @@ package io.debezium.embedded.handler;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Canal 线程未捕获异常处理器
+ * {@link Thread.UncaughtExceptionHandler} used by the Debezium worker threads.
+ * <p>Logs uncaught exceptions so they are not silently swallowed by the
+ * executor.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Slf4j
 public class DebeziumThreadUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
+    /**
+     * Logs the uncaught throwable along with the offending thread name.
+     *
+     * @param t the thread that threw
+     * @param e the uncaught throwable
+     */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         log.error("thread "+ t.getName()+" have a exception",e);

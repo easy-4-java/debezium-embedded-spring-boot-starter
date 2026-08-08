@@ -5,61 +5,70 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * MySQL 连接器配置器。
- * 
- * <p>该配置器负责将 Spring Boot 配置属性转换为 Debezium MySQL 连接器配置，
- * 严格按照官方文档中的参数名称进行映射。</p>
- * 
+ * {@link ConnectorConfigurer} for the Debezium MySQL connector.
+ *
+ * <p>Translates {@link DebeziumConnectorProperties} into the connector
+ * configuration keys documented by Debezium, including snapshot, GTID,
+ * connection, security and performance tuning.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/connectors/mysql.html">MySQL Connector Documentation</a>
  */
 public class MySqlConnectorConfigurer implements ConnectorConfigurer {
-    
+
+    /**
+     * Applies the MySQL connector configuration to the supplied builder.
+     *
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the connector configuration properties
+     */
     @Override
     public void apply(Configuration.Builder builder, DebeziumConnectorProperties properties) {
         PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
-        // ==================== 必需配置 ====================
+        // ==================== Required configuration ====================
         builder.with("connector.class", "io.debezium.connector.mysql.MySqlConnector");
 
-        // 数据库连接配置（必需）
+        // Database connection configuration (required)
         mapRequiredProperties(builder, map, properties);
-        
-        // ==================== 批量设置可选参数 ====================
-        
-        // 数据库和表过滤配置
+
+        // ==================== Optional configuration ====================
+
+        // Database and table filtering
         mapDatabaseAndTableFilters(builder, map, properties);
-        
-        // MySQL 特定配置
+
+        // MySQL specific configuration
         if (properties.getMySql() != null) {
             DebeziumConnectorProperties.MySql mySql = properties.getMySql();
-            
-            // 快照配置
+
+            // Snapshot configuration
             mapSnapshotConfig(builder, map, mySql);
-            
-            // 连接和性能配置
+
+            // Connection and performance configuration
             mapConnectionAndPerformanceConfig(builder, map, mySql);
-            
-            // GTID 和复制配置
+
+            // GTID and replication configuration
             mapGtidAndReplicationConfig(builder, map, mySql);
-            
-            // 数据库连接配置
+
+            // Database connection configuration
             mapDatabaseConnectionConfig(builder, map, mySql);
-            
-            // 事件处理配置
+
+            // Event processing configuration
             mapEventProcessingConfig(builder, map, mySql);
-            
-            // 性能优化配置
+
+            // Performance optimisation configuration
             mapPerformanceOptimizationConfig(builder, map, mySql);
-            
-            // 安全配置
+
+            // Security configuration
             mapSecurityConfig(builder, map, mySql);
-            
-            // 监控和调试配置
+
+            // Monitoring and debugging configuration
             mapMonitoringAndDebugConfig(builder, map, mySql);
         }
     }
-    
+
     /**
-     * 映射必需配置属性
+     * Maps the required database connection properties.
      */
     private void mapRequiredProperties(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties properties) {
         map.from(properties::getHost).whenHasText().to(value -> builder.with("database.hostname", value));
@@ -71,7 +80,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射数据库和表过滤配置
+     * Maps the database and table include/exclude filters.
      */
     private void mapDatabaseAndTableFilters(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties properties) {
         map.from(properties::getDatabaseIncludeList).whenHasText().to(value -> builder.with("database.include.list", value));
@@ -81,7 +90,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射快照配置
+     * Maps the snapshot configuration.
      */
     private void mapSnapshotConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getSnapshotMode).whenHasText().to(value -> builder.with("snapshot.mode", value));
@@ -92,7 +101,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射连接和性能配置
+     * Maps the connection and performance configuration.
      */
     private void mapConnectionAndPerformanceConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getConnectTimeoutMs).to(value -> builder.with("connect.timeout.ms", value));
@@ -103,7 +112,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射 GTID 和复制配置
+     * Maps the GTID and replication configuration.
      */
     private void mapGtidAndReplicationConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getGtidSourceFilterDmlEvents).to(value -> builder.with("gtid.source.filter.dml.events", value));
@@ -113,7 +122,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射数据库连接配置
+     * Maps the JDBC connection configuration.
      */
     private void mapDatabaseConnectionConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getAllowPublicKeyRetrieval).to(value -> builder.with("database.allowPublicKeyRetrieval", value));
@@ -128,7 +137,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射事件处理配置
+     * Maps the event processing configuration.
      */
     private void mapEventProcessingConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getTombstonesOnDelete).to(value -> builder.with("tombstones.on.delete", value));
@@ -138,7 +147,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射性能优化配置
+     * Maps the performance optimisation configuration.
      */
     private void mapPerformanceOptimizationConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getMaxQueueSizeInBytes).to(value -> builder.with("max.queue.size.in.bytes", value));
@@ -148,7 +157,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射安全配置
+     * Maps the SSL security configuration.
      */
     private void mapSecurityConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getSslMode).whenHasText().to(value -> builder.with("database.ssl.mode", value));
@@ -159,7 +168,7 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
     }
     
     /**
-     * 映射监控和调试配置
+     * Maps the schema history monitoring and debugging configuration.
      */
     private void mapMonitoringAndDebugConfig(Configuration.Builder builder, PropertyMapper map, DebeziumConnectorProperties.MySql mySql) {
         map.from(mySql::getDatabaseHistorySkipUnparseableDdl).to(value -> builder.with("database.history.skip.unparseable.ddl", value));
