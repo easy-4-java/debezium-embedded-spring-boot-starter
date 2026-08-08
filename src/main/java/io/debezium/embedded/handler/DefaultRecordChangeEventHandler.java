@@ -25,22 +25,35 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * Default {@link RecordChangeEventHandler} for Connect record-change events.
+ * <p>
+ * Materialises each {@code SourceRecord} into a {@link io.debezium.embedded.model.DebeziumModel.ChangeListenerModel}
+ * and dispatches it to the matching {@link RecordChangeEventEntryHandler} (or
+ * annotation based {@code @OnDebeziumEvent} method). After the batch is
+ * processed the committer is asked to mark the batch as finished.
+ * </p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Slf4j
 public class DefaultRecordChangeEventHandler implements RecordChangeEventHandler, ApplicationContextAware {
 
-    /**
-     * 通过注解方式的表数据变更处理器
-     */
+    /** Annotation based event holders keyed by table name. */
     private Map<String, List<DebeziumEventHolder>> tableEventHolderMap;
-    /**
-     * 表处理器
-     */
+    /** Programmatic entry handlers keyed by table name. */
     private Map<String, RecordChangeEventEntryHandler> tableHandlerMap;
-    /**
-     * 行数据处理器
-     */
+    /** Strategy used to materialise row payloads. */
     private RowDataHandler<List<Map<String, String>>> rowDataHandler;
 
+    /**
+     * Creates a new handler indexing the supplied entry handlers and using the
+     * supplied row-data handler.
+     *
+     * @param entryHandlers  programmatic per-table entry handlers
+     * @param rowDataHandler strategy used to materialise row payloads
+     */
     public DefaultRecordChangeEventHandler(List<? extends RecordChangeEventEntryHandler> entryHandlers,
                                            RowDataHandler<List<Map<String, String>>> rowDataHandler) {
         this.tableHandlerMap = HandlerUtil.getTableHandlerMap(entryHandlers);

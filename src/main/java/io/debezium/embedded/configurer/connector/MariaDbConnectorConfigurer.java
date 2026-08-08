@@ -5,7 +5,11 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * MariaDB 连接器配置器。
+ * {@link ConnectorConfigurer} for the Debezium MariaDB connector.
+ * <p>Reuses the MySQL connector class with schema-change events disabled.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class MariaDbConnectorConfigurer implements ConnectorConfigurer {
     @Override
@@ -18,7 +22,7 @@ public class MariaDbConnectorConfigurer implements ConnectorConfigurer {
          */
         PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
-        // 基础连接配置
+        // Base connection configuration
         map.from(properties::getHost).whenHasText().to(value -> builder.with("database.hostname", value));
         map.from(properties::getPort).whenNonNull().to(value -> builder.with("database.port", value));
         map.from(properties::getUsername).whenHasText().to(value -> builder.with("database.user", value));
@@ -26,13 +30,13 @@ public class MariaDbConnectorConfigurer implements ConnectorConfigurer {
         map.from(properties::getServerId).whenHasText().to(value -> builder.with("database.server.id", value));
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
         
-        // 数据库和表过滤
+        // Database and table filtering
         map.from(properties::getDatabaseIncludeList).whenHasText().to(value -> builder.with("database.include.list", value));
         map.from(properties::getTableIncludeList).whenHasText().to(value -> builder.with("table.include.list", value));
         map.from(properties::getDatabaseExcludeList).whenHasText().to(value -> builder.with("database.exclude.list", value));
         map.from(properties::getTableExcludeList).whenHasText().to(value -> builder.with("table.exclude.list", value));
 
-        // MariaDB 特定配置
+        // MariaDB specific configuration
         if (properties.getMySql() != null) {
             DebeziumConnectorProperties.MySql mySql = properties.getMySql();
             map.from(mySql::getSnapshotMode).whenHasText().to(value -> builder.with("snapshot.mode", value));

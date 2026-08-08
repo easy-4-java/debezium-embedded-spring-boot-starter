@@ -4,14 +4,21 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 
 /**
- * 抽象的数据库连接器配置器，将数据库特定的配置写入 Debezium Configuration.Builder。
+ * Strategy interface for writing database-connector specific settings into a
+ * Debezium {@link Configuration.Builder}.
+ * <p>Each supported {@link ConnectorType} ships with a dedicated implementation
+ * that knows how to translate {@link DebeziumConnectorProperties} into the
+ * connector's own configuration keys.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public interface ConnectorConfigurer {
     /**
-     * 应用数据库历史记录配置。
+     * Applies the connector specific configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the connector configuration properties
      */
     void apply(Configuration.Builder builder, DebeziumConnectorProperties properties);
 }

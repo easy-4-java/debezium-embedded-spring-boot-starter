@@ -21,6 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Thread and executor construction utilities.
+ * <p>Centralises creation of named thread factories and graceful shutdown of
+ * threads and executors used by the starter.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Slf4j
 public final class ThreadUtils {
 

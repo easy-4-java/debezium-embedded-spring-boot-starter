@@ -5,15 +5,18 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * JDBC 数据库历史记录配置器。
+ * {@link SchemaHistoryConfigurer} for JDBC based schema history.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class JdbcSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     
     /**
-     * 应用数据库历史记录配置。
+     * Applies the configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
@@ -26,13 +29,13 @@ public class JdbcSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
          */
         PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
-        // 基础连接配置
+        // Base connection configuration
         map.from(jdbc::getUrl).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.connection.url", value));
         map.from(jdbc::getUsername).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.connection.user", value));
         map.from(jdbc::getPassword).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.connection.password", value));
         map.from(jdbc::getTableName).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.table.name", value));
         
-        // 连接池配置
+        // Connection pool configuration
         map.from(jdbc::getPoolSize).to(value -> builder.with("schema.history.internal.jdbc.connection.pool.size", value));
         map.from(jdbc::getMinConnections).to(value -> builder.with("schema.history.internal.jdbc.connection.pool.min.connections", value));
         map.from(jdbc::getMaxConnections).to(value -> builder.with("schema.history.internal.jdbc.connection.pool.max.connections", value));
@@ -53,7 +56,7 @@ public class JdbcSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         map.from(jdbc::getAutoCommit).to(value -> builder.with("schema.history.internal.jdbc.auto.commit", value));
         map.from(jdbc::getTransactionIsolation).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.transaction.isolation", value));
         
-        // SSL 配置
+        // SSL configuration
         map.from(jdbc::getUseSSL).to(value -> builder.with("schema.history.internal.jdbc.use.ssl", value));
         map.from(jdbc::getSslMode).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.ssl.mode", value));
         map.from(jdbc::getVerifyServerCertificate).to(value -> builder.with("schema.history.internal.jdbc.verify.server.certificate", value));

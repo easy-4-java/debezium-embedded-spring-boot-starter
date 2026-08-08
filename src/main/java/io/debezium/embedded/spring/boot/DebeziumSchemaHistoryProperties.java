@@ -5,78 +5,66 @@ import lombok.Data;
 
 
 /**
- * Debezium 数据库历史记录配置属性。
+ * Configuration properties for the Debezium database schema history store.
+ * <p>
+ * The schema history store persists the DDL statements observed by a connector
+ * so that the in-memory schema can be rebuilt on restart. The active backend is
+ * selected via {@link #type}.
+ * </p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Data
 public class DebeziumSchemaHistoryProperties {
 
-    
-    /**
-     * 历史记录类型
-     */
+
+    /** Schema history backend type (default {@code FILE}). */
     private SchemaHistoryType type = SchemaHistoryType.FILE;
-    
-    /**
-     * 文件历史记录配置
-     */
+
+    /** File based history configuration. */
     private File file = new File();
-    
-    /**
-     * Kafka 历史记录配置
-     */
+
+    /** Kafka based history configuration. */
     private Kafka kafka = new Kafka();
-    
-    /**
-     * JDBC 历史记录配置
-     */
+
+    /** JDBC based history configuration. */
     private Jdbc jdbc = new Jdbc();
-    
-    /**
-     * Redis 历史记录配置
-     */
+
+    /** Redis based history configuration. */
     private Redis redis = new Redis();
-    
-    /**
-     * S3 历史记录配置
-     */
+
+    /** Amazon S3 based history configuration. */
     private S3 s3 = new S3();
-    
-    /**
-     * RocketMQ 历史记录配置
-     */
+
+    /** RocketMQ based history configuration. */
     private RocketMq rocketMq = new RocketMq();
-    
-    /**
-     * Azure Blob Storage 历史记录配置
-     */
+
+    /** Azure Blob Storage based history configuration. */
     private AzureBlob azureBlob = new AzureBlob();
-    
-    /**
-     * 自定义历史记录配置
-     */
+
+    /** Custom history configuration. */
     private Custom custom = new Custom();
-    
+
+    /** File based schema history configuration. */
     @Data
     public static class File {
 
         /**
-         * 历史记录文件路径
-         * 
-         * <p>指定存储数据库模式历史记录的文件路径。</p>
-         * <p>默认值：dbhistory.dat</p>
+         * Path of the file used to store the schema history.
+         * <p>Default {@code dbhistory.dat}.</p>
          */
         private String filename = "dbhistory.dat";
 
     }
     
+    /** Kafka based schema history configuration. */
     @Data
     public static class Kafka {
 
         /**
-         * Kafka 主题名称
-         * 
-         * <p>指定存储数据库模式历史记录的 Kafka 主题名称。</p>
-         * <p>无默认值，必须显式配置。</p>
+         * Kafka topic name used to store the schema history.
+         * <p>No default; must be configured explicitly.</p>
          */
         private String topic;
         

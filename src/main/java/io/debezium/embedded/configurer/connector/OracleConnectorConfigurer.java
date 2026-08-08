@@ -5,7 +5,10 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * Oracle 连接器配置器。
+ * {@link ConnectorConfigurer} for the Debezium Oracle connector.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class OracleConnectorConfigurer implements ConnectorConfigurer {
     @Override
@@ -17,19 +20,19 @@ public class OracleConnectorConfigurer implements ConnectorConfigurer {
          */
         PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
-        // 基础连接配置
+        // Base connection configuration
         map.from(properties::getHost).whenHasText().to(value -> builder.with("database.hostname", value));
         map.from(properties::getPort).whenNonNull().to(value -> builder.with("database.port", value));
         map.from(properties::getUsername).whenHasText().to(value -> builder.with("database.user", value));
         map.from(properties::getPassword).whenHasText().to(value -> builder.with("database.password", value));
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
         
-        // 数据库和表过滤
+        // Database and table filtering
         map.from(properties::getDatabaseIncludeList).whenHasText().to(value -> builder.with("database.include.list", value));
         map.from(properties::getTableIncludeList).whenHasText().to(value -> builder.with("table.include.list", value));
         map.from(properties::getSchemaIncludeList).whenHasText().to(value -> builder.with("schema.include.list", value));
 
-        // Oracle 特定配置
+        // Oracle specific configuration
         if (properties.getOracle() != null) {
             DebeziumConnectorProperties.Oracle oracle = properties.getOracle();
             
@@ -38,7 +41,7 @@ public class OracleConnectorConfigurer implements ConnectorConfigurer {
             map.from(oracle::getSnapshotMode).whenHasText().to(value -> builder.with("snapshot.mode", value));
             map.from(oracle::getLogMiningStrategy).whenHasText().to(value -> builder.with("log.mining.strategy", value));
             
-            // 其他重要配置
+            // Other important configuration
             builder.with("database.connection.adapter", "logminer")
                    .with("database.oracle.version", "19")
                    .with("database.oracle.connection.pool.size", "20")
@@ -48,12 +51,12 @@ public class OracleConnectorConfigurer implements ConnectorConfigurer {
                    .with("database.oracle.connection.pool.timeout", "300")
                    .with("database.oracle.connection.pool.validate", "true");
             
-            // 事件处理配置
+            // Event processing configuration
             builder.with("tombstones.on.delete", "false")
                    .with("include.query", "false")
                    .with("database.initial.statements", "ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'");
             
-            // 性能优化配置
+            // Performance optimisation configuration
             builder.with("poll.interval.ms", "1000")
                    .with("max.queue.size", "8192")
                    .with("max.batch.size", "2048")

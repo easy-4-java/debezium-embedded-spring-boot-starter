@@ -5,16 +5,19 @@ import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * Redis 型 Offset 存储配置。
+ * {@link OffsetStorageConfigurer} for Redis based offset storage.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/configuration/storage.html">storage.html</a>
  */
 public class RedisOffsetStorageConfigurer implements OffsetStorageConfigurer {
 
     /**
-     * 应用存储配置。
+     * Applies the storage configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 存储配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the offset-storage configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
@@ -31,7 +34,7 @@ public class RedisOffsetStorageConfigurer implements OffsetStorageConfigurer {
         map.from(redis::getPassword).whenHasText().to(value -> builder.with("offset.storage.redis.password", value));
         map.from(redis::getDbIndex).to(value -> builder.with("offset.storage.redis.db.index", value));
         
-        // SSL 配置
+        // SSL configuration
         map.from(redis::getSslEnabled).to(value -> builder.with("offset.storage.redis.ssl.enabled", value));
         map.from(redis::getSslHostnameVerificationEnabled).to(value -> builder.with("offset.storage.redis.ssl.hostname.verification.enabled", value));
         map.from(redis::getSslTruststorePath).whenHasText().to(value -> builder.with("offset.storage.redis.ssl.truststore.path", value));
