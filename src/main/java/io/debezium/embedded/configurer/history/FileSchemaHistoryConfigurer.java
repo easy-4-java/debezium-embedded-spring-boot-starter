@@ -5,15 +5,18 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * 文件数据库历史记录配置器。
+ * {@link SchemaHistoryConfigurer} for file based schema history.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class FileSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     
     /**
-     * 应用数据库历史记录配置。
+     * Applies the configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {

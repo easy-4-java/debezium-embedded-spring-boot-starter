@@ -5,7 +5,10 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * SQL Server 连接器配置器。
+ * {@link ConnectorConfigurer} for the Debezium Microsoft SQL Server connector.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class SqlServerConnectorConfigurer implements ConnectorConfigurer {
     @Override
@@ -17,19 +20,19 @@ public class SqlServerConnectorConfigurer implements ConnectorConfigurer {
          */
         PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
-        // 基础连接配置
+        // Base connection configuration
         map.from(properties::getHost).whenHasText().to(value -> builder.with("database.hostname", value));
         map.from(properties::getPort).whenNonNull().to(value -> builder.with("database.port", value));
         map.from(properties::getUsername).whenHasText().to(value -> builder.with("database.user", value));
         map.from(properties::getPassword).whenHasText().to(value -> builder.with("database.password", value));
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
         
-        // 数据库和表过滤
+        // Database and table filtering
         map.from(properties::getDatabaseIncludeList).whenHasText().to(value -> builder.with("database.include.list", value));
         map.from(properties::getTableIncludeList).whenHasText().to(value -> builder.with("table.include.list", value));
         map.from(properties::getSchemaIncludeList).whenHasText().to(value -> builder.with("schema.include.list", value));
 
-        // SQL Server 特定配置
+        // SQL Server specific configuration
         if (properties.getSqlServer() != null) {
             DebeziumConnectorProperties.SqlServer sqlServer = properties.getSqlServer();
             
@@ -37,7 +40,7 @@ public class SqlServerConnectorConfigurer implements ConnectorConfigurer {
             map.from(sqlServer::getSnapshotMode).whenHasText().to(value -> builder.with("snapshot.mode", value));
             map.from(sqlServer::getSnapshotIsolationMode).whenHasText().to(value -> builder.with("snapshot.isolation.mode", value));
             
-            // 其他重要配置
+            // Other important configuration
             builder.with("database.encrypt", "false")
                    .with("database.trustServerCertificate", "true")
                    .with("database.applicationName", "DebeziumConnector")
@@ -45,12 +48,12 @@ public class SqlServerConnectorConfigurer implements ConnectorConfigurer {
                    .with("database.commandTimeout", "30000")
                    .with("database.loginTimeout", "30000");
             
-            // 事件处理配置
+            // Event processing configuration
             builder.with("tombstones.on.delete", "false")
                    .with("include.query", "false")
                    .with("database.initial.statements", "SET ARITHABORT ON; SET NUMERIC_ROUNDABORT OFF; SET CONCAT_NULL_YIELDS_NULL ON; SET ANSI_WARNINGS ON; SET ANSI_PADDING ON; SET ANSI_NULLS ON; SET QUOTED_IDENTIFIER ON;");
             
-            // 性能优化配置
+            // Performance optimisation configuration
             builder.with("poll.interval.ms", "1000")
                    .with("max.queue.size", "8192")
                    .with("max.batch.size", "2048")

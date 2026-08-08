@@ -8,29 +8,28 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * 监听 debezium 操作
+ * Holds a single {@link OnDebeziumEvent} annotated method along with its
+ * target bean, used by the annotation dispatch path to invoke listeners.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Getter
 public class DebeziumEventHolder {
 
-    /**
-     * 目标 bean
-     */
+    /** The target bean instance. */
     private final Object target;
-    /**
-     * 监听的方法
-     */
+    /** The annotated listener method. */
     private final Method method;
-    /**
-     * 监听的事件
-     */
+    /** The merged {@link OnDebeziumEvent} annotation. */
     private final OnDebeziumEvent event;
 
     /**
-     * 构造方法，设置目标，方法以及注解类型
-     * @param target Object 目标
-     * @param method Method 方法
-     * @param event OnDebeziumEvent 注解
+     * Creates a new holder binding a target, method and annotation.
+     *
+     * @param target the bean instance owning the method
+     * @param method the listener method
+     * @param event  the merged {@link OnDebeziumEvent} annotation
      */
     public DebeziumEventHolder(Object target, Method method, OnDebeziumEvent event) {
         this.target = target;
@@ -38,6 +37,11 @@ public class DebeziumEventHolder {
         this.event = event;
     }
 
+    /**
+     * @param eventType the event type to test
+     * @return {@code true} when this holder matches the supplied event type
+     *         (or the holder accepts any event type)
+     */
     public boolean isMatch(DebeziumEntry.EventType eventType) {
         return this.getEvent().eventType().length == 0 || Arrays.stream(this.getEvent().eventType()).anyMatch(ev -> ev == eventType) || eventType == null;
     }

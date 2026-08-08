@@ -7,68 +7,49 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * debezium 消息模型
+ * Lightweight model describing a single change event processed by the handler.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Setter
 @Getter
 @Builder
 public class DebeziumModel {
 
+    /**
+     * Compact representation of a parsed change-listener record, used to forward
+     * change data to downstream consumers.
+     */
     public static class ChangeListenerModel {
-        /**
-         * 当前DB
-         */
+        /** Database the change occurred in. */
         private String db;
-        /**
-         * 当前表
-         */
+        /** Table the change occurred on. */
         private String table;
-        /**
-         * 操作类型 1 add 2 update 3 delete
-         */
+        /** Operation type: {@code 1} add, {@code 2} update, {@code 3} delete. */
         private Integer eventType;
-        /**
-         * 操作时间
-         */
+        /** Time the change occurred (epoch millis). */
         private Long changeTime;
     }
 
-    /**
-     * 消息id
-     */
+    /** Monotonic message id. */
     private long id;
 
-    /**
-     * 库名
-     */
+    /** Destination (connector) name. */
     private String destination;
-    /**
-     * 库名
-     */
+    /** Database schema name. */
     private String schema;
-    /**
-     * 表名
-     */
+    /** Table name. */
     private String table;
-    /**
-     * 事件类型
-     */
+    /** Change event type. */
     private DebeziumEntry.EventType eventType;
-    /**
-     * 现数据
-     */
+    /** Serialised current row state. */
     private String data;
-    /**
-     * 之前数据
-     */
+    /** Serialised previous row state (for updates / deletes). */
     private String beforeData;
-    /**
-     * binlog changeTime
-     */
+    /** Time the change occurred in the source binlog (epoch millis). */
     private Long changeTime;
-    /**
-     * dml build timeStamp
-     */
+    /** Timestamp at which the DML was built (epoch millis). */
     private Long createTime;
 
     @Override

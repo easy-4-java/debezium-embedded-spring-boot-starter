@@ -3,15 +3,21 @@ package io.debezium.embedded.configurer.history;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 
 /**
- * 数据库历史记录配置器工厂。
+ * Factory that resolves the {@link SchemaHistoryConfigurer} implementation
+ * matching the schema-history type declared on the supplied properties.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class SchemaHistoryConfigurerFactory {
-    
+
     /**
-     * 根据历史记录类型创建对应的配置器。
+     * Returns the {@link SchemaHistoryConfigurer} for the schema-history type
+     * carried by {@code historyProperties}.
      *
-     * @param historyProperties 历史记录类型
-     * @return 历史记录配置器
+     * @param historyProperties the schema-history configuration properties
+     * @return the matching schema-history configurer
+     * @throws IllegalArgumentException if the schema-history type is not supported
      */
     public static SchemaHistoryConfigurer from(DebeziumSchemaHistoryProperties historyProperties) {
         switch (historyProperties.getType()) {

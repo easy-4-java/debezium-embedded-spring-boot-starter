@@ -4,14 +4,19 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 
 /**
- * 抽象的 Offset 存储配置器，将 storage 相关配置写入 Debezium Configuration.Builder。
+ * Strategy interface for writing offset-storage backend settings into a
+ * Debezium {@link Configuration.Builder}.
+ * <p>Each {@link OffsetStorageType} ships with a dedicated implementation.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public interface OffsetStorageConfigurer {
     /**
-     * 应用存储配置。
+     * Applies the offset-storage configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 存储配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the offset-storage configuration properties
      */
     void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties);
 }
