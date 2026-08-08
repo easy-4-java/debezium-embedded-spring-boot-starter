@@ -38,8 +38,27 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Debezium Embedded 自动配置
- * 支持多个数据库实例的 Embedded 模式，支持多种数据库连接器
+ * Spring Boot auto-configuration for the Debezium Embedded engine.
+ * <p>
+ * Activates when {@link DebeziumEngine} is on the classpath. It wires up the
+ * supporting beans (completion callback, row-data handler, change-event handlers)
+ * and constructs one {@link DebeziumEmbeddedClient} per configured instance under
+ * the {@code debezium.instances.*} namespace. Multiple database connectors
+ * (MySQL, PostgreSQL, MongoDB, Oracle, SQL Server, Cassandra, Spanner, etc.)
+ * are supported through the connector, offset-storage and schema-history
+ * configurer SPI.
+ * </p>
+ *
+ * <h3>Configuration</h3>
+ * <ul>
+ *   <li>{@code debezium.instances[*].connector.destination} — unique name of the connector instance</li>
+ *   <li>{@code debezium.instances[*].event-type} — {@code CHANGE_EVENT} (JSON) or {@code RECORD_CHANGE_EVENT} (Connect)</li>
+ *   <li>{@code debezium.instances[*].connector.type} — database connector type (default {@code MYSQL})</li>
+ *   <li>{@code debezium.thread-pool.*} — executor tuning for the embedded engine</li>
+ * </ul>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @org.springframework.context.annotation.Configuration
 @ConditionalOnClass({ DebeziumEngine.class })
@@ -49,10 +68,19 @@ import java.util.stream.Collectors;
 public class DebeziumEmbeddedAutoConfiguration {
 
     /**
-     * Default completion callback which just logs the error. If connector finishes successfully it does nothing.
+     * Default {@link DebeziumEngine.CompletionCallback} that logs failures and
+     * does nothing on success. Used when the application does not provide its own
+     * completion callback bean.
      */
     @Slf4j
     public static class DefaultCompletionCallback implements DebeziumEngine.CompletionCallback {
+        /**
+         * Logs the supplied message and error when the engine did not finish successfully.
+         *
+         * @param success {@code true} if the engine completed normally, {@code false} on error
+         * @param message human-readable description of the completion result
+         * @param error   the throwable that caused the failure, or {@code null} on success
+         */
         @Override
         public void handle(final boolean success, final String message, final Throwable error) {
             if (!success) {
@@ -61,18 +89,36 @@ public class DebeziumEmbeddedAutoConfiguration {
         }
     }
 
+    /**
+     * Registers the default completion callback unless the application defines its own.
+     *
+     * @return a {@link DefaultCompletionCallback} instance
+     */
     @Bean
     @ConditionalOnMissingBean
     public DebeziumEngine.CompletionCallback completionCallback() {
         return new DefaultCompletionCallback();
     }
 
+    /**
+     * Registers the default row-data handler that materialises change-event payloads
+     * into a list of column maps using a {@link MapColumnModelFactory}.
+     *
+     * @return a {@link MapRowDataHandlerImpl} backed by {@link MapColumnModelFactory}
+     */
     @Bean
     @ConditionalOnMissingBean
     public RowDataHandler<List<Map<String, String>>> recordRowDataHandler() {
         return new MapRowDataHandlerImpl(new MapColumnModelFactory());
     }
 
+    /**
+     * Registers the default {@link ChangeEventHandler} for {@code CHANGE_EVENT} instances.
+     *
+     * @param rowDataHandler       the row-data handler used to materialise payloads
+     * @param entryHandlerProvider object provider for optional {@link RecordChangeEventEntryHandler} beans
+     * @return a {@link DefaultChangeEventHandler} backed by the supplied handlers
+     */
     @Bean
     @ConditionalOnMissingBean
     public ChangeEventHandler changeEventHandler(RowDataHandler<List<Map<String, String>>> rowDataHandler,
@@ -80,6 +126,13 @@ public class DebeziumEmbeddedAutoConfiguration {
         return new DefaultChangeEventHandler(entryHandlerProvider.stream().collect(Collectors.toList()), rowDataHandler);
     }
 
+    /**
+     * Registers the default {@link RecordChangeEventHandler} for {@code RECORD_CHANGE_EVENT} instances.
+     *
+     * @param rowDataHandler       the row-data handler used to materialise payloads
+     * @param entryHandlerProvider object provider for optional {@link RecordChangeEventEntryHandler} beans
+     * @return a {@link DefaultRecordChangeEventHandler} backed by the supplied handlers
+     */
     @Bean
     @ConditionalOnMissingBean
     public RecordChangeEventHandler recordChangeEventHandler(RowDataHandler<List<Map<String, String>>> rowDataHandler,
@@ -88,7 +141,22 @@ public class DebeziumEmbeddedAutoConfiguration {
     }
 
     /**
-     * 初始化 DebeziumEmbeddedClient
+     * Builds and starts the singleton {@link DebeziumEmbeddedClient} that owns all
+     * configured Debezium engine instances. Each entry under
+     * {@code debezium.instances} is turned into a {@link DebeziumEngine} of the
+     * appropriate format (JSON change events or Connect record-change events),
+     * then handed to the client which runs them on the dedicated executor.
+     *
+     * @param properties                     the bound {@code debezium.*} configuration
+     * @param clockProvider                  optional {@link Clock} provider, defaults to system clock
+     * @param completionCallbackProvider     optional engine completion callback
+     * @param connectorCallbackProvider      optional engine connector callback
+     * @param offsetCommitPolicyProvider     optional offset commit policy, defaults to {@code always}
+     * @param changeEventHandlerProvider     optional {@link ChangeEventHandler} for JSON events
+     * @param recordChangeEventHandlerProvider optional {@link RecordChangeEventHandler} for Connect events
+     * @param debeziumTaskExecutor           the executor used to run the engines
+     * @return a started {@link DebeziumEmbeddedClient}
+     * @throws IllegalStateException if no change-event handler is available or no instances are configured
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public DebeziumEmbeddedClient singleDebeziumEmbeddedClient(DebeziumEmbeddedProperties properties,

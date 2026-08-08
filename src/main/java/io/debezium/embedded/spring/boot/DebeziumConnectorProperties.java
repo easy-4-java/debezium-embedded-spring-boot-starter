@@ -4,641 +4,405 @@ import io.debezium.embedded.configurer.connector.ConnectorType;
 import lombok.Data;
 
 /**
- * Debezium Connector 属性
+ * Configuration properties describing a single Debezium source connector.
+ * <p>
+ * Common connection fields (host, port, credentials, include/exclude lists) apply
+ * across most connectors, while the nested per-database blocks hold connector
+ * specific tuning. The active block is selected via {@link #type}.
+ * </p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Data
 public class DebeziumConnectorProperties {
 
     /**
-     * 连接器类型
+     * Database connector type. Selects which nested configuration block and
+     * connector class are used. Defaults to {@link ConnectorType#MYSQL}.
      */
     private ConnectorType type = ConnectorType.MYSQL;
 
     /**
-     * 连接器名称
+     * Logical name of this connector instance; also used as the topic prefix
+     * and the destination identifier for offset storage.
      */
     private String destination;
 
-    /**
-     * 数据库主机
-     */
+    /** Database host name or IP address. */
     private String host;
 
-    /**
-     * 数据库端口
-     */
+    /** Database TCP port. */
     private Integer port;
 
-    /**
-     * 数据库用户名
-     */
+    /** Database login username. */
     private String username;
 
-    /**
-     * 数据库密码
-     */
+    /** Database login password. */
     private String password;
 
-    /**
-     * 数据库名称（PostgreSQL 等使用）
-     */
+    /** Database name (used by PostgreSQL, Oracle, SQL Server, etc.). */
     private String databaseName;
 
-    /**
-     * 服务器 ID（MySQL 使用）
-     */
+    /** Replication server id (MySQL only). */
     private String serverId;
 
-    /**
-     * 服务器名称
-     */
+    /** Logical server name used to namespace emitted topics. */
     private String serverName;
 
-    /**
-     * 包含的数据库列表
-     */
+    /** Comma separated list of databases to include. */
     private String databaseIncludeList;
 
-    /**
-     * 排除的数据库列表
-     */
+    /** Comma separated list of databases to exclude. */
     private String databaseExcludeList;
 
-    /**
-     * 包含的表列表
-     */
+    /** Comma separated list of tables to include (regular-expression format). */
     private String tableIncludeList;
 
-    /**
-     * 排除的表列表
-     */
+    /** Comma separated list of tables to exclude (regular-expression format). */
     private String tableExcludeList;
 
-    /**
-     * 包含的 Schema 列表（PostgreSQL 等使用）
-     */
+    /** Comma separated list of schemas to include (PostgreSQL/SQL Server). */
     private String schemaIncludeList;
 
-    /**
-     * 排除的 Schema 列表
-     */
+    /** Comma separated list of schemas to exclude. */
     private String schemaExcludeList;
 
-    /**
-     * MySQL 特定配置
-     */
+    /** MySQL specific connector configuration. */
     private MySql mySql = new MySql();
 
-    /**
-     * PostgreSQL 特定配置
-     */
+    /** PostgreSQL specific connector configuration. */
     private PostgreSql postgreSql = new PostgreSql();
 
-    /**
-     * MongoDB 特定配置
-     */
+    /** MongoDB specific connector configuration. */
     private MongoDb mongoDb = new MongoDb();
 
-    /**
-     * Oracle 特定配置
-     */
+    /** Oracle specific connector configuration. */
     private Oracle oracle = new Oracle();
 
-    /**
-     * SQL Server 特定配置
-     */
+    /** SQL Server specific connector configuration. */
     private SqlServer sqlServer = new SqlServer();
 
-    /**
-     * Cassandra 特定配置
-     */
+    /** Cassandra specific connector configuration. */
     private Cassandra cassandra = new Cassandra();
 
-    /**
-     * Spanner 特定配置
-     */
+    /** Google Spanner specific connector configuration. */
     private Spanner spanner = new Spanner();
 
-    /**
-     * 自定义连接器配置
-     */
+    /** Custom connector configuration used when {@link #type} is {@code CUSTOM}. */
     private Custom custom = new Custom();
 
+    /** MySQL connector specific tuning. */
     @Data
     public static class MySql {
-        // ==================== 快照配置 ====================
+        // ==================== Snapshot configuration ====================
         /**
-         * 快照模式
-         * 可选值：initial, when_needed, never, schema_only, schema_only_recovery
+         * Snapshot mode. One of {@code initial}, {@code when_needed}, {@code never},
+         * {@code schema_only}, {@code schema_only_recovery}. Defaults to {@code initial}.
          */
         private String snapshotMode = "initial";
-        
+
         /**
-         * 快照锁定模式
-         * 可选值：minimal, extended, none
+         * Snapshot locking mode. One of {@code minimal}, {@code extended}, {@code none}.
+         * Defaults to {@code minimal}.
          */
         private String snapshotLockingMode = "minimal";
-        
-        /**
-         * 快照新表
-         * 是否对新创建的表进行快照
-         */
+
+        /** Whether to snapshot newly added tables. Defaults to {@code false}. */
         private Boolean snapshotNewTables = false;
-        
-        /**
-         * 快照延迟（毫秒）
-         * 快照开始前的延迟时间
-         */
+
+        /** Delay (ms) before the snapshot starts. Defaults to {@code 0}. */
         private Long snapshotDelayMs = 0L;
-        
-        /**
-         * 快照获取大小
-         * 每次快照获取的行数
-         */
+
+        /** Number of rows fetched per snapshot query. Defaults to {@code 1024}. */
         private Integer snapshotFetchSize = 1024;
-        
-        // ==================== 连接和性能配置 ====================
-        /**
-         * 连接超时时间（毫秒）
-         */
+
+        // ==================== Connection / performance configuration ====================
+        /** Database connection timeout in milliseconds (default {@code 30000}). */
         private Integer connectTimeoutMs = 30000;
-        
-        /**
-         * 轮询间隔（毫秒）
-         */
+
+        /** Time (ms) between polls for new change events (default {@code 1000}). */
         private Integer pollIntervalMs = 1000;
-        
-        /**
-         * 最大队列大小
-         */
+
+        /** Maximum number of change events queued in the blocking queue (default {@code 8192}). */
         private Integer maxQueueSize = 8192;
-        
-        /**
-         * 最大批次大小
-         */
+
+        /** Maximum number of change events processed in a single batch (default {@code 2048}). */
         private Integer maxBatchSize = 2048;
-        
-        /**
-         * 最小行数流结果
-         */
+
+        /** Minimum row count that triggers result streaming instead of buffering (default {@code 1000}). */
         private Integer minRowCountToStreamResults = 1000;
-        
-        /**
-         * 最大队列大小（字节）
-         */
+
+        /** Maximum queue size in bytes (default 1 GB). */
         private Long maxQueueSizeInBytes = 1073741824L; // 1GB
-        
-        // ==================== GTID 和复制配置 ====================
-        /**
-         * GTID 源过滤 DML 事件
-         */
+
+        // ==================== GTID / replication configuration ====================
+        /** Whether GTID sources filter DML events (default {@code true}). */
         private Boolean gtidSourceFilterDmlEvents = true;
-        
-        /**
-         * GTID 源包含数据库
-         * 逗号分隔的数据库列表
-         */
+
+        /** Comma separated list of databases included by GTID sources. */
         private String gtidSourceIncludeDatabases;
-        
-        /**
-         * GTID 源排除数据库
-         * 逗号分隔的数据库列表
-         */
+
+        /** Comma separated list of databases excluded by GTID sources. */
         private String gtidSourceExcludeDatabases;
-        
-        /**
-         * GTID 源过滤 DDL 事件
-         */
+
+        /** Whether GTID sources filter DDL events (default {@code false}). */
         private Boolean gtidSourceFilterDdlEvents = false;
-        
-        // ==================== 数据库连接配置 ====================
-        /**
-         * 允许公钥检索
-         */
+
+        // ==================== Database connection configuration ====================
+        /** Whether the JDBC driver is allowed public key retrieval (default {@code true}). */
         private Boolean allowPublicKeyRetrieval = true;
-        
-        /**
-         * 使用 SSL
-         */
+
+        /** Whether to use SSL for the JDBC connection (default {@code false}). */
         private Boolean useSSL = false;
-        
-        /**
-         * 自动重连
-         */
+
+        /** Whether the JDBC driver should auto reconnect (default {@code true}). */
         private Boolean autoReconnect = true;
-        
-        /**
-         * 允许多查询
-         */
+
+        /** Whether multi-statement queries are permitted (default {@code true}). */
         private Boolean allowMultiQueries = true;
-        
+
         /**
-         * 零日期时间行为
-         * 可选值：convertToNull, exception, round
+         * Behaviour for zero date-time values. One of {@code convertToNull},
+         * {@code exception}, {@code round}. Defaults to {@code convertToNull}.
          */
         private String zeroDateTimeBehavior = "convertToNull";
-        
-        /**
-         * 字符编码
-         */
+
+        /** JDBC character encoding (default {@code utf8}). */
         private String characterEncoding = "utf8";
-        
-        /**
-         * 使用 Unicode
-         */
+
+        /** Whether the JDBC driver uses Unicode (default {@code true}). */
         private Boolean useUnicode = true;
-        
-        /**
-         * 服务器时区
-         */
+
+        /** Server time zone used by the JDBC driver. */
         private String serverTimezone;
-        
-        /**
-         * 连接时区
-         */
+
+        /** Connection time zone used by the JDBC driver. */
         private String connectionTimeZone;
-        
-        // ==================== 事件处理配置 ====================
-        /**
-         * 删除时生成墓碑
-         */
+
+        // ==================== Event processing configuration ====================
+        /** Whether to emit a tombstone event after a delete (default {@code false}). */
         private Boolean tombstonesOnDelete = false;
-        
-        /**
-         * 包含查询
-         */
+
+        /** Whether to include the originating SQL query in events (default {@code false}). */
         private Boolean includeQuery = false;
-        
-        /**
-         * 包含 Schema 变更
-         */
+
+        /** Whether to emit DDL schema-change events (default {@code true}). */
         private Boolean includeSchemaChanges = true;
-        
-        /**
-         * 提供事务元数据
-         */
+
+        /** Whether to enrich events with transaction metadata (default {@code false}). */
         private Boolean provideTransactionMetadata = false;
-        
-        // ==================== 性能优化配置 ====================
-        /**
-         * 增量快照块大小
-         */
+
+        // ==================== Performance tuning ====================
+        /** Chunk size (rows) used by incremental snapshots (default {@code 1024}). */
         private Integer incrementalSnapshotChunkSize = 1024;
-        
-        /**
-         * 增量快照允许 Schema 变更
-         */
+
+        /** Whether incremental snapshots tolerate concurrent schema changes (default {@code true}). */
         private Boolean incrementalSnapshotAllowSchemaChanges = true;
-        
-        /**
-         * 信号数据集合
-         * 用于增量快照的信号表
-         */
+
+        /** Fully qualified signal data collection used to drive incremental snapshots. */
         private String signalDataCollection;
-        
-        // ==================== 安全配置 ====================
+
+        // ==================== Security configuration ====================
         /**
-         * SSL 模式
-         * 可选值：disabled, preferred, required, verify_ca, verify_identity
+         * SSL mode. One of {@code disabled}, {@code preferred}, {@code required},
+         * {@code verify_ca}, {@code verify_identity}. Defaults to {@code disabled}.
          */
         private String sslMode = "disabled";
-        
-        /**
-         * SSL 信任库
-         */
+
+        /** Path to the SSL truststore. */
         private String sslTruststore;
-        
-        /**
-         * SSL 信任库密码
-         */
+
+        /** Password protecting the SSL truststore. */
         private String sslTruststorePassword;
-        
-        /**
-         * SSL 密钥库
-         */
+
+        /** Path to the SSL keystore. */
         private String sslKeystore;
-        
-        /**
-         * SSL 密钥库密码
-         */
+
+        /** Password protecting the SSL keystore. */
         private String sslKeystorePassword;
-        
-        // ==================== 监控和调试配置 ====================
-        /**
-         * 数据库历史跳过不可解析的 DDL
-         */
+
+        // ==================== Monitoring / debugging ====================
+        /** Whether unparseable DDL statements are skipped (default {@code false}). */
         private Boolean databaseHistorySkipUnparseableDdl = false;
-        
-        /**
-         * 数据库历史仅存储监控表的 DDL
-         */
+
+        /** Whether history stores DDL for monitored tables only (default {@code false}). */
         private Boolean databaseHistoryStoreOnlyMonitoredTablesDdl = false;
-        
-        /**
-         * 数据库历史仅存储捕获表的 DDL
-         */
+
+        /** Whether history stores DDL for captured tables only (default {@code false}). */
         private Boolean databaseHistoryStoreOnlyCapturedTablesDdl = false;
-        
-        /**
-         * 数据库历史 Kafka 恢复尝试次数
-         */
+
+        /** Number of Kafka history recovery attempts (default {@code 4}). */
         private Integer databaseHistoryKafkaRecoveryAttempts = 4;
-        
-        /**
-         * 数据库历史 Kafka 恢复轮询间隔（毫秒）
-         */
+
+        /** Poll interval (ms) for Kafka history recovery (default {@code 100}). */
         private Integer databaseHistoryKafkaRecoveryPollIntervalMs = 100;
     }
 
+    /** PostgreSQL connector specific tuning. */
     @Data
     public static class PostgreSql {
-        /**
-         * 插件名称
-         */
+        /** Logical replication plugin name (default {@code pgoutput}). */
         private String pluginName = "pgoutput";
-        /**
-         * 复制槽名称
-         */
+        /** Logical replication slot name. */
         private String slotName;
-        /**
-         * 发布名称
-         */
+        /** Publication name for the {@code pgoutput} plugin. */
         private String publicationName;
-        /**
-         * 快照模式
-         */
+        /** Snapshot mode (default {@code initial}). */
         private String snapshotMode = "initial";
-        /**
-         * SSL 模式
-         */
+        /** SSL mode (default {@code prefer}). */
         private String sslMode = "prefer";
-        /**
-         * SSL 证书
-         */
+        /** SSL client certificate path. */
         private String sslCert = "";
-        /**
-         * SSL 密钥
-         */
+        /** SSL client private key path. */
         private String sslKey = "";
-        /**
-         * SSL 根证书
-         */
+        /** SSL root certificate path. */
         private String sslRootCert = "";
-        /**
-         * SSL 密码
-         */
+        /** Password protecting the SSL client key. */
         private String sslPassword = "";
-        /**
-         * 删除时生成墓碑
-         */
+        /** Whether to emit a tombstone event after a delete (default {@code false}). */
         private Boolean tombstonesOnDelete = false;
-        /**
-         * 包含查询
-         */
+        /** Whether to include the originating SQL query in events (default {@code false}). */
         private Boolean includeQuery = false;
-        /**
-         * 轮询间隔（毫秒）
-         */
+        /** Time (ms) between polls for new change events (default {@code 1000}). */
         private Integer pollIntervalMs = 1000;
-        /**
-         * 最大队列大小
-         */
+        /** Maximum number of change events queued in the blocking queue (default {@code 8192}). */
         private Integer maxQueueSize = 8192;
-        /**
-         * 最大批次大小
-         */
+        /** Maximum number of change events processed in a single batch (default {@code 2048}). */
         private Integer maxBatchSize = 2048;
     }
 
+    /** MongoDB connector specific tuning. */
     @Data
     public static class MongoDb {
-        /**
-         * 连接字符串
-         */
+        /** MongoDB connection string (e.g. {@code mongodb://host:port}). */
         private String connectionString;
-        /**
-         * 数据库列表
-         */
+        /** Comma separated list of databases to capture. */
         private String databaseList;
-        /**
-         * 集合列表
-         */
+        /** Comma separated list of collections to capture. */
         private String collectionList;
-        /**
-         * 快照模式
-         */
+        /** Snapshot mode (default {@code initial}). */
         private String snapshotMode = "initial";
-        /**
-         * 认证源
-         */
+        /** Authentication source database (default {@code admin}). */
         private String authSource = "admin";
-        /**
-         * 连接超时时间（毫秒）
-         */
+        /** Connection timeout in milliseconds (default {@code 30000}). */
         private Integer connectTimeoutMs = 30000;
-        /**
-         * Socket 超时时间（毫秒）
-         */
+        /** Socket timeout in milliseconds (default {@code 30000}). */
         private Integer socketTimeoutMs = 30000;
-        /**
-         * 服务器选择超时时间（毫秒）
-         */
+        /** Server selection timeout in milliseconds (default {@code 30000}). */
         private Integer serverSelectionTimeoutMs = 30000;
-        /**
-         * 最大连接池大小
-         */
+        /** Maximum connection pool size (default {@code 100}). */
         private Integer maxConnectionPoolSize = 100;
-        /**
-         * 最小连接池大小
-         */
+        /** Minimum connection pool size (default {@code 5}). */
         private Integer minConnectionPoolSize = 5;
-        /**
-         * 最大连接空闲时间（毫秒）
-         */
+        /** Maximum idle time for connections in milliseconds (default {@code 30000}). */
         private Integer maxConnectionIdleTimeMs = 30000;
-        /**
-         * 最大连接生命周期（毫秒）
-         */
+        /** Maximum lifetime for connections in milliseconds (default {@code 300000}). */
         private Integer maxConnectionLifeTimeMs = 300000;
-        /**
-         * 删除时生成墓碑
-         */
+        /** Whether to emit a tombstone event after a delete (default {@code false}). */
         private Boolean tombstonesOnDelete = false;
-        /**
-         * 包含查询
-         */
+        /** Whether to include the originating operation in events (default {@code false}). */
         private Boolean includeQuery = false;
-        /**
-         * 字段重命名
-         */
+        /** Comma separated field rename mappings. */
         private String fieldRenames = "";
-        /**
-         * 字段排除列表
-         */
+        /** Comma separated list of fields to exclude. */
         private String fieldExcludeList = "";
-        /**
-         * 轮询间隔（毫秒）
-         */
+        /** Time (ms) between polls for new change events (default {@code 1000}). */
         private Integer pollIntervalMs = 1000;
-        /**
-         * 最大队列大小
-         */
+        /** Maximum number of change events queued in the blocking queue (default {@code 8192}). */
         private Integer maxQueueSize = 8192;
-        /**
-         * 最大批次大小
-         */
+        /** Maximum number of change events processed in a single batch (default {@code 2048}). */
         private Integer maxBatchSize = 2048;
-        /**
-         * 最大队列大小（字节）
-         */
+        /** Maximum queue size in bytes (default 1 GB). */
         private Long maxQueueSizeInBytes = 1073741824L;
     }
 
+    /** Oracle connector specific tuning. */
     @Data
     public static class Oracle {
-        /**
-         * 数据库名称
-         */
+        /** Database name (SID or service name). */
         private String database;
-        /**
-         * PDB 名称
-         */
+        /** Pluggable database (PDB) name. */
         private String pdbName;
-        /**
-         * 快照模式
-         */
+        /** Snapshot mode (default {@code initial}). */
         private String snapshotMode = "initial";
-        /**
-         * 日志挖掘策略
-         */
+        /** Log mining strategy (default {@code online_catalog}). */
         private String logMiningStrategy = "online_catalog";
     }
 
+    /** SQL Server connector specific tuning. */
     @Data
     public static class SqlServer {
-        /**
-         * 数据库名称
-         */
+        /** Database name. */
         private String database;
-        /**
-         * 快照模式
-         */
+        /** Snapshot mode (default {@code initial}). */
         private String snapshotMode = "initial";
-        /**
-         * 快照隔离级别
-         */
+        /** Snapshot isolation level (default {@code snapshot}). */
         private String snapshotIsolationMode = "snapshot";
     }
 
+    /** Cassandra connector specific tuning. */
     @Data
     public static class Cassandra {
-        /**
-         * 连接字符串
-         */
+        /** Cassandra connection string. */
         private String connectionString;
-        /**
-         * 数据库列表（keyspace）
-         */
+        /** Comma separated list of keyspaces to capture. */
         private String databaseList;
-        /**
-         * 表列表
-         */
+        /** Comma separated list of tables to capture. */
         private String tableList;
-        /**
-         * 快照模式
-         */
+        /** Snapshot mode (default {@code initial}). */
         private String snapshotMode = "initial";
-        /**
-         * 连接超时时间（毫秒）
-         */
+        /** Connection timeout in milliseconds (default {@code 30000}). */
         private Integer connectTimeoutMs = 30000;
-        /**
-         * 读取超时时间（毫秒）
-         */
+        /** Read timeout in milliseconds (default {@code 30000}). */
         private Integer readTimeoutMs = 30000;
-        /**
-         * 删除时生成墓碑
-         */
+        /** Whether to emit a tombstone event after a delete (default {@code false}). */
         private Boolean tombstonesOnDelete = false;
-        /**
-         * 包含查询
-         */
+        /** Whether to include the originating query in events (default {@code false}). */
         private Boolean includeQuery = false;
-        /**
-         * 轮询间隔（毫秒）
-         */
+        /** Time (ms) between polls for new change events (default {@code 1000}). */
         private Integer pollIntervalMs = 1000;
-        /**
-         * 最大队列大小
-         */
+        /** Maximum number of change events queued in the blocking queue (default {@code 8192}). */
         private Integer maxQueueSize = 8192;
-        /**
-         * 最大批次大小
-         */
+        /** Maximum number of change events processed in a single batch (default {@code 2048}). */
         private Integer maxBatchSize = 2048;
     }
 
+    /** Google Cloud Spanner connector specific tuning. */
     @Data
     public static class Spanner {
-        /**
-         * 连接字符串
-         */
+        /** Spanner connection string. */
         private String connectionString;
-        /**
-         * 数据库列表
-         */
+        /** Comma separated list of databases to capture. */
         private String databaseList;
-        /**
-         * 表列表
-         */
+        /** Comma separated list of tables to capture. */
         private String tableList;
-        /**
-         * 快照模式
-         */
+        /** Snapshot mode (default {@code initial}). */
         private String snapshotMode = "initial";
-        /**
-         * 项目 ID
-         */
+        /** Google Cloud project id. */
         private String projectId;
-        /**
-         * 实例 ID
-         */
+        /** Spanner instance id. */
         private String instanceId;
-        /**
-         * 数据库 ID
-         */
+        /** Spanner database id. */
         private String databaseId;
-        /**
-         * 删除时生成墓碑
-         */
+        /** Whether to emit a tombstone event after a delete (default {@code false}). */
         private Boolean tombstonesOnDelete = false;
-        /**
-         * 包含查询
-         */
+        /** Whether to include the originating query in events (default {@code false}). */
         private Boolean includeQuery = false;
-        /**
-         * 轮询间隔（毫秒）
-         */
+        /** Time (ms) between polls for new change events (default {@code 1000}). */
         private Integer pollIntervalMs = 1000;
-        /**
-         * 最大队列大小
-         */
+        /** Maximum number of change events queued in the blocking queue (default {@code 8192}). */
         private Integer maxQueueSize = 8192;
-        /**
-         * 最大批次大小
-         */
+        /** Maximum number of change events processed in a single batch (default {@code 2048}). */
         private Integer maxBatchSize = 2048;
     }
 
+    /** Custom connector configuration block. */
     @Data
     public static class Custom {
-        /**
-         * 自定义连接器类名
-         */
+        /** Fully qualified class name of the custom {@code SourceConnector} implementation. */
         private String connectorClass;
-        /**
-         * 自定义配置属性
-         */
+        /** Additional raw properties passed straight through to the connector. */
         private java.util.Map<String, String> props = new java.util.HashMap<>();
     }
 }

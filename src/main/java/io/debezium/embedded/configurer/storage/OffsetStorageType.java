@@ -1,36 +1,24 @@
 package io.debezium.embedded.configurer.storage;
 
 /**
- * Offset 存储类型枚举。
+ * Enumeration of the offset-storage backends supported by this starter.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public enum OffsetStorageType {
 
-    /**
-     * 文件存储
-     */
+    /** In-memory offset storage (non-persistent, testing only). */
     MEMORY,
-    /**
-     * 文件存储
-     */
+    /** File-based offset storage. */
     FILE,
-    /**
-     * Kafka 存储
-     */
+    /** Kafka topic based offset storage. */
     KAFKA,
-    
-    /**
-     * JDBC 存储
-     */
+    /** JDBC database based offset storage. */
     JDBC,
-    
-    /**
-     * Redis 存储
-     */
+    /** Redis based offset storage. */
     REDIS,
-    
-    /**
-     * 自定义存储
-     */
+    /** User-provided custom offset-storage backend. */
     CUSTOM
 }
 

@@ -6,8 +6,12 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.*;
 
 /**
- * Debezium 处理器注解，继承 @Component
- * 用于标注 Debezium 处理器
+ * Marks a class as a Debezium event handler.
+ * <p>Meta-annotated with {@link Component} so annotated beans are picked up
+ * by component scanning and registered with the application context.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -16,8 +20,9 @@ import java.lang.annotation.*;
 public @interface DebeziumEventHandler {
 
     /**
-     * 继承 @Component 的 value 属性
-     * @return String
+     * Alias for the {@link Component#value()} bean name.
+     *
+     * @return the bean name
      */
     @AliasFor(annotation = Component.class)
     String value() default "";

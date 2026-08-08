@@ -1,47 +1,27 @@
 package io.debezium.embedded.configurer.history;
 
 /**
- * 数据库历史记录类型枚举。
+ * Enumeration of the schema-history storage backends supported by this starter.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public enum SchemaHistoryType {
 
-    /**
-     * 文件历史记录
-     */
+    /** File-based schema history. */
     FILE,
-    
-    /**
-     * Kafka 历史记录
-     */
+    /** Kafka topic based schema history. */
     KAFKA,
-    
-    /**
-     * JDBC 历史记录
-     */
+    /** JDBC database based schema history. */
     JDBC,
-    
-    /**
-     * Redis 历史记录
-     */
+    /** Redis based schema history. */
     REDIS,
-    
-    /**
-     * S3 历史记录
-     */
+    /** Amazon S3 based schema history. */
     S3,
-    
-    /**
-     * RocketMQ 历史记录
-     */
+    /** RocketMQ based schema history. */
     ROCKETMQ,
-    
-    /**
-     * Azure Blob Storage 历史记录
-     */
+    /** Azure Blob Storage based schema history. */
     AZURE_BLOB,
-    
-    /**
-     * 自定义历史记录
-     */
+    /** User-provided custom schema history backend. */
     CUSTOM
 }

@@ -5,7 +5,13 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * 自定义连接器配置器。
+ * {@link ConnectorConfigurer} for user-provided custom connectors.
+ * <p>Applies the connector class name declared on
+ * {@link DebeziumConnectorProperties.Custom} and forwards any additional raw
+ * properties to the builder.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class CustomConnectorConfigurer implements ConnectorConfigurer {
     @Override
@@ -18,7 +24,7 @@ public class CustomConnectorConfigurer implements ConnectorConfigurer {
         if (properties.getCustom() != null) {
             map.from(properties.getCustom()::getConnectorClass).whenHasText().to(value -> builder.with("connector.class", value));
             
-            // 添加自定义配置属性
+            // Forward custom raw properties
             map.from(properties.getCustom()::getProps).whenNonNull().to(props -> {
                 if (props != null) {
                     props.forEach(builder::with);

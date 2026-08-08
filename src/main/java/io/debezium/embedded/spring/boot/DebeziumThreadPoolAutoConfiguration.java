@@ -9,11 +9,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+/**
+ * Auto-configuration for the dedicated thread pool used to run the Debezium
+ * embedded engine and dispatch its change events.
+ * <p>Exposes a {@link ThreadPoolTaskExecutor} bean named
+ * {@code debeziumEmbeddedExecutor}, configured from
+ * {@link DebeziumThreadPoolProperties} and using a
+ * {@link DebeziumThreadUncaughtExceptionHandler}.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Configuration
 @ConditionalOnClass(DebeziumEngine.class)
 @EnableConfigurationProperties(DebeziumThreadPoolProperties.class)
 public class DebeziumThreadPoolAutoConfiguration {
 
+    /**
+     * Builds the {@code debeziumEmbeddedExecutor} task executor used by the
+     * embedded engine.
+     *
+     * @param poolProperties the bound {@code debezium.thread-pool.*} properties
+     * @return a configured {@link ThreadPoolTaskExecutor}; shut down on context close
+     */
     @Bean(destroyMethod = "shutdown", name = "debeziumEmbeddedExecutor")
     public ThreadPoolTaskExecutor debeziumEmbeddedExecutor(DebeziumThreadPoolProperties poolProperties) {
         BasicThreadFactory factory = BasicThreadFactory.builder()
@@ -30,11 +48,11 @@ public class DebeziumThreadPoolAutoConfiguration {
         executor.setWaitForTasksToCompleteOnShutdown(poolProperties.isWaitForTasksToCompleteOnShutdown());
         executor.setThreadNamePrefix(poolProperties.getThreadNamePrefix());
         /*
-         * 拒绝处理策略
-         * CallerRunsPolicy()：交由调用方线程运行，比如 main 线程。
-         * AbortPolicy()：直接抛出异常。
-         * DiscardPolicy()：直接丢弃。
-         * DiscardOldestPolicy()：丢弃队列中最老的任务。
+         * Rejected-execution policies:
+         * CallerRunsPolicy() - run the task on the caller thread (e.g. main thread)
+         * AbortPolicy()       - throw a RejectedExecutionException
+         * DiscardPolicy()     - silently discard the new task
+         * DiscardOldestPolicy() - drop the oldest queued task and retry
          */
         executor.setRejectedExecutionHandler(poolProperties.getRejectedPolicy().getRejectedExecutionHandler());
         return executor;

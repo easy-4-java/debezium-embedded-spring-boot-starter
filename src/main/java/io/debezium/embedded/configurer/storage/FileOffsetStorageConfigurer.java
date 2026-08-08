@@ -5,15 +5,18 @@ import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * File 型 Offset 存储配置。
+ * {@link OffsetStorageConfigurer} for file based offset storage.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class FileOffsetStorageConfigurer implements OffsetStorageConfigurer {
 
     /**
-     * 应用存储配置。
+     * Applies the storage configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 存储配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the offset-storage configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
