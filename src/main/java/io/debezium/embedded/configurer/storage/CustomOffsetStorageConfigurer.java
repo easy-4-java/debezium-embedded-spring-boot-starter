@@ -4,15 +4,18 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 
 /**
- * 自定义 Offset 存储配置。
+ * {@link OffsetStorageConfigurer} for user-provided custom offset-storage backends.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class CustomOffsetStorageConfigurer implements OffsetStorageConfigurer {
 
     /**
-     * 应用存储配置。
+     * Applies the storage configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 存储配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the offset-storage configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
@@ -21,7 +24,7 @@ public class CustomOffsetStorageConfigurer implements OffsetStorageConfigurer {
         if (custom.getClassName() != null) {
             builder.with("offset.storage", custom.getClassName());
             
-            // 添加自定义配置属性
+            // Forward custom raw properties
             if (custom.getProps() != null) {
                 custom.getProps().forEach((key, value) -> {
                     if (key.startsWith("offset.storage.")) {

@@ -22,62 +22,87 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Debezium Embedded 配置属性
+ * Configuration properties for the Debezium Embedded engine.
+ * <p>
+ * Bound to the {@code debezium.*} namespace. Holds a list of
+ * {@link Instance} definitions, each describing one independent Debezium
+ * engine (connector + offset storage + schema history + async engine tuning).
+ * </p>
+ *
+ * <p>Typical {@code application.yml} usage:</p>
+ * <pre>{@code
+ * debezium:
+ *   instances:
+ *     - connector:
+ *         destination: order-pg
+ *         type: POSTGRES
+ *         host: db.local
+ *         port: 5432
+ *       event-type: CHANGE_EVENT
+ * }</pre>
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @ConfigurationProperties(DebeziumEmbeddedProperties.PREFIX)
 @Data
 public class DebeziumEmbeddedProperties {
 
-	public static final String PREFIX = "debezium";
+    /**
+     * Configuration prefix used by Spring Boot to bind properties.
+     */
+    public static final String PREFIX = "debezium";
 
     /**
-     * 配置信息
+     * Ordered list of Debezium engine instances to start. Each instance maps to
+     * a separate {@link io.debezium.engine.DebeziumEngine} owned by the client.
      */
     private List<Instance> instances = new ArrayList<>();
 
+    /**
+     * Definition of a single Debezium engine instance.
+     */
     @Data
     public static class Instance {
 
         /**
-         * 订阅类型
-        List<DebeziumEntry.EntryType> subscribeTypes = Collections.singletonList(DebeziumEntry.EntryType.ROWDATA);
-         */
-
-        /**
-         * 订阅事件类型
+         * Type of change events this instance should emit.
          */
         EventType eventType = EventType.CHANGE_EVENT;
 
         /**
-         * 异步引擎属性
+         * Asynchronous engine tuning (worker threads, shutdown timeout, ordering).
          */
         DebeziumAsyncEngineProperties async = new DebeziumAsyncEngineProperties();
 
         /**
-         * 连接器配置
+         * Source database connector configuration.
          */
         DebeziumConnectorProperties connector = new DebeziumConnectorProperties();
 
         /**
-         * 数据库历史记录配置
+         * Database schema history persistence configuration.
          */
         DebeziumSchemaHistoryProperties schemaHistory = new DebeziumSchemaHistoryProperties();
 
         /**
-         * 偏移量存储配置
+         * Offset storage (consumer position) configuration.
          */
         DebeziumOffsetStorageProperties offsetStorage = new DebeziumOffsetStorageProperties();
 
     }
 
     /**
-     * <pre>
-     ** 事件类型 *
-     * </pre>
+     * Supported event formats emitted by the embedded engine.
+     * <ul>
+     *   <li>{@link #CHANGE_EVENT} — serialised JSON change events (high level consumer)</li>
+     *   <li>{@link #RECORD_CHANGE_EVENT} — Connect {@code SourceRecord} change events (low level consumer)</li>
+     * </ul>
      */
     public enum EventType {
+        /** JSON-formatted change events produced via the {@code Json} format. */
         CHANGE_EVENT,
+        /** Kafka Connect {@code SourceRecord} change events produced via the {@code Connect} format. */
         RECORD_CHANGE_EVENT;
     }
 

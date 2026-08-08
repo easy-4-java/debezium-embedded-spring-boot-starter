@@ -5,15 +5,18 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * Kafka 数据库历史记录配置器。
+ * {@link SchemaHistoryConfigurer} for Kafka topic based schema history.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class KafkaSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     
     /**
-     * 应用数据库历史记录配置。
+     * Applies the configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
@@ -63,7 +66,7 @@ public class KafkaSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         map.from(consumer::getReconnectBackoffMs).to(value -> builder.with("schema.history.internal.kafka.consumer.reconnect.backoff.ms", value));
         map.from(consumer::getRetryBackoffMs).to(value -> builder.with("schema.history.internal.kafka.consumer.retry.backoff.ms", value));
         
-        // 安全配置
+        // Security configuration
         DebeziumSchemaHistoryProperties.Kafka.Security security = kafka.getSecurity();
         map.from(security::getSecurityProtocol).whenHasText().to(value -> builder.with("schema.history.internal.kafka.security.protocol", value));
         map.from(security::getSaslMechanism).whenHasText().to(value -> builder.with("schema.history.internal.kafka.sasl.mechanism", value));
