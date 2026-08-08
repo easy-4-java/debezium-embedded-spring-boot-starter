@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Debezium Embedded 配置属性
- * @author ： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 @ConfigurationProperties(DebeziumEmbeddedProperties.PREFIX)
 @Data
