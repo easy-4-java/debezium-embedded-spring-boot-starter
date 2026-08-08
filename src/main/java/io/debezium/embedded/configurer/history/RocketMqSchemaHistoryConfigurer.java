@@ -5,16 +5,19 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * RocketMQ 数据库历史记录配置器。
+ * {@link SchemaHistoryConfigurer} for RocketMQ based schema history.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/configuration/storage.html">storage.html</a>
  */
 public class RocketMqSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     
     /**
-     * 应用数据库历史记录配置。
+     * Applies the configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {

@@ -20,29 +20,35 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 
+/**
+ * Default {@link ChangeEventHandler} for JSON change events.
+ * <p>
+ * Parses the JSON payload, resolves the operation type and dispatches the
+ * change to the matching {@link RecordChangeEventEntryHandler} (or annotation
+ * based {@code @OnDebeziumEvent} method). Both handler styles are discovered
+ * automatically from the application context.
+ * </p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Slf4j
 public class DefaultChangeEventHandler implements ChangeEventHandler, ApplicationContextAware {
 
-    /**
-     * 指定订阅的事件类型，主要用于标识事务的开始，变更数据，结束
-    private List<DebeziumEntry.EntryType> subscribeTypes = Arrays.asList(DebeziumEntry.EntryType.ROWDATA);
-     */
-    /**
-     * 通过注解方式的表数据变更处理器
-     */
+    /** Annotation based event holders keyed by table name. */
     private Map<String, List<DebeziumEventHolder>> tableEventHolderMap;
-    /**
-     * 表数据变更处理器
-     */
+    /** Programmatic entry handlers keyed by table name. */
     private Map<String, RecordChangeEventEntryHandler> tableHandlerMap;
-    /**
-     * 行数据处理器
-     */
-    /**
-     * 行数据处理器
-     */
+    /** Strategy used to materialise row payloads. */
     private RowDataHandler<List<Map<String, String>>> rowDataHandler;
 
+    /**
+     * Creates a new handler indexing the supplied entry handlers and using the
+     * supplied row-data handler.
+     *
+     * @param entryHandlers   programmatic per-table entry handlers
+     * @param rowDataHandler  strategy used to materialise row payloads
+     */
     public DefaultChangeEventHandler(List<? extends RecordChangeEventEntryHandler> entryHandlers,
                                            RowDataHandler<List<Map<String, String>>> rowDataHandler) {
         this.tableHandlerMap = HandlerUtil.getTableHandlerMap(entryHandlers);

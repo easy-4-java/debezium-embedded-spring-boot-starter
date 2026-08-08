@@ -19,8 +19,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * {@link IModelFactory} that materialises rows from a list of
+ * {@link DebeziumEntry.Column} values, using MyBatis-Plus table metadata to
+ * map column names to entity properties.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 public class EntryColumnModelFactory extends AbstractModelFactory<List<DebeziumEntry.Column>> {
 
+    /** {@inheritDoc} */
     @Override
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, List<DebeziumEntry.Column> columns) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
