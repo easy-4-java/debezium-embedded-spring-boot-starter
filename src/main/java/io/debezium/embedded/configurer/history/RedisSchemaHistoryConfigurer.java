@@ -5,16 +5,19 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * Redis 数据库历史记录配置器。
+ * {@link SchemaHistoryConfigurer} for Redis based schema history.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/configuration/storage.html">storage.html</a>
  */
 public class RedisSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     
     /**
-     * 应用数据库历史记录配置。
+     * Applies the configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
@@ -30,7 +33,7 @@ public class RedisSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         map.from(redis::getPassword).whenHasText().to(value -> builder.with("schema.history.internal.redis.password", value));
         map.from(redis::getDbIndex).to(value -> builder.with("schema.history.internal.redis.db.index", value));
         
-        // SSL 配置
+        // SSL configuration
         map.from(redis::getSslEnabled).to(value -> builder.with("schema.history.internal.storage.redis.ssl.enabled", value));
         map.from(redis::getSslHostnameVerificationEnabled).to(value -> builder.with("schema.history.internal.storage.redis.ssl.hostname.verification.enabled", value));
         map.from(redis::getSslTruststorePath).whenHasText().to(value -> builder.with("schema.history.internal.storage.redis.ssl.truststore.path", value));

@@ -4,15 +4,20 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 
 /**
- * 数据库历史记录配置器接口。
+ * Strategy interface for writing schema-history backend settings into a
+ * Debezium {@link Configuration.Builder}.
+ * <p>Each {@link SchemaHistoryType} ships with a dedicated implementation.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public interface SchemaHistoryConfigurer {
-    
+
     /**
-     * 应用历史记录配置到 Debezium 配置构建器。
+     * Applies the schema-history configuration to the supplied builder.
      *
-     * @param builder Debezium 配置构建器
-     * @param properties 历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the schema-history configuration properties
      */
     void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties);
 }

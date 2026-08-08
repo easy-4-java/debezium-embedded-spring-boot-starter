@@ -9,16 +9,33 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.Map;
 
+/**
+ * {@link IModelFactory} that materialises rows from a {@code Map<String,String>}
+ * of column-name to value, using MyBatis-Plus table metadata to map columns
+ * to entity properties.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 public class MapColumnModelFactory extends AbstractModelFactory<Map<String, String>> {
 
+    /**
+     * Populates a new instance of {@code tableClass} from the supplied value map.
+     *
+     * @param tableClass the target row type
+     * @param valueMap   column name to value mapping
+     * @param <R>        the row model type
+     * @return the materialised row model
+     * @throws Exception if instantiation fails
+     */
     @Override
     <R> R newInstance(Class<R> tableClass, Map<String, String> valueMap) throws Exception {
         R object = BeanUtils.instantiateClass(tableClass);
-        // 获取 mybatis-plus 的注解信息
+        // Read MyBatis-Plus table metadata
         TableInfo tableInfo = TableInfoHelper.getTableInfo(tableClass);
-        // 循环表数据
+        // Iterate over mapped fields
         for (TableFieldInfo tableFieldInfo:  tableInfo.getFieldList()) {
-            // 获取实体对象属性映射字段对应的值
+            // Resolve the column value mapped to the entity property
             Object value = MapUtils.getObject(valueMap, tableFieldInfo.getColumn());
             PropertyUtils.setProperty(object, tableFieldInfo.getProperty(), value);
         }
