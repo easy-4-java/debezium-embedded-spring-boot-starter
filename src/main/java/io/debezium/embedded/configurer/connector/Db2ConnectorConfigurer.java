@@ -1,22 +1,35 @@
 package io.debezium.embedded.configurer.connector;
 
 import io.debezium.config.Configuration;
-import io.debezium.connector.db2.Db2Connector;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * DB2 连接器配置器。
+ * {@link ConnectorConfigurer} for the Debezium IBM Db2 connector.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
-public class Db2ConnectorConfigurer extends AbstractConnectorConfigurer {
-
+public class Db2ConnectorConfigurer implements ConnectorConfigurer {
     @Override
-    public String getConnectorClass() {
-        return Db2Connector.class.getName();
-    }
-
-    @Override
-    public void apply(PropertyMapper map, Configuration.Builder builder, DebeziumConnectorProperties properties) {
-
+    public void apply(Configuration.Builder builder, DebeziumConnectorProperties properties) {
+        builder.with("connector.class", "io.debezium.connector.db2.Db2Connector");
+        
+        /*
+         * 批量设置参数
+         */
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        
+        // Base connection configuration
+        map.from(properties::getHost).whenHasText().to(value -> builder.with("database.hostname", value));
+        map.from(properties::getPort).whenNonNull().to(value -> builder.with("database.port", value));
+        map.from(properties::getUsername).whenHasText().to(value -> builder.with("database.user", value));
+        map.from(properties::getPassword).whenHasText().to(value -> builder.with("database.password", value));
+        map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
+        
+        // Database and table filtering
+        map.from(properties::getDatabaseIncludeList).whenHasText().to(value -> builder.with("database.include.list", value));
+        map.from(properties::getTableIncludeList).whenHasText().to(value -> builder.with("table.include.list", value));
+        map.from(properties::getSchemaIncludeList).whenHasText().to(value -> builder.with("schema.include.list", value));
     }
 }

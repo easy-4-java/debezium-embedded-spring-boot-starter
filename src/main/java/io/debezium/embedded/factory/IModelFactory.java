@@ -1,36 +1,46 @@
 package io.debezium.embedded.factory;
 
-import io.debezium.embedded.handler.RowEntryHandler;
+
+import io.debezium.embedded.handler.RecordChangeEventEntryHandler;
 
 import java.util.Set;
 
 /**
- * 模型工厂接口
- * 
- * @param <T> 模型类型
+ * Factory that materialises a row model of type {@code R} from a raw payload
+ * of type {@code T}, using the metadata declared on the supplied
+ * {@link RecordChangeEventEntryHandler}.
+ *
+ * @param <T> the raw payload type (e.g. list of columns, map of values)
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public interface IModelFactory<T> {
 
-    /**
-     * 创建模型实例
-     *
-     * @param input 输入对象
-     * @param entryHandler 记录变更事件处理器
-     * @return 模型实例
-     * @throws Exception 异常
-     */ 
-    <R> R newInstance(T input, RowEntryHandler<R> entryHandler) throws Exception;
 
     /**
-     * 创建模型实例
+     * Creates a new row model instance from the supplied payload.
      *
-     * @param input 输入对象
-     * @param entryHandler 记录变更事件处理器
-     * @param updatedColumns 更新列
-     * @return 模型实例
-     * @throws Exception 异常
+     * @param entryHandler the handler carrying the target type metadata
+     * @param t            the raw payload
+     * @param <R>          the row model type
+     * @return the materialised row model
+     * @throws Exception if instantiation fails
      */
-    default <R> R newInstance(T input, RowEntryHandler<R> entryHandler, Set<String> updatedColumns) throws Exception {
+    <R> R newInstance(RecordChangeEventEntryHandler entryHandler, T t) throws Exception;
+
+    /**
+     * Creates a new row model instance restricted to the supplied updated columns.
+     * <p>Default implementation returns {@code null}; override to support
+     * partial updates.</p>
+     *
+     * @param entryHandler the handler carrying the target type metadata
+     * @param t            the raw payload
+     * @param updateColumn the set of updated column names
+     * @param <R>          the row model type
+     * @return the materialised row model, or {@code null} if not supported
+     * @throws Exception if instantiation fails
+     */
+    default <R> R newInstance(RecordChangeEventEntryHandler entryHandler, T t, Set<String> updateColumn) throws Exception {
         return null;
     }
 }

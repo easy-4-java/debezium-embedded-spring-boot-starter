@@ -1,40 +1,34 @@
 package io.debezium.embedded.configurer.connector;
 
 /**
- * 数据库连接器类型。
- * 支持主流数据库的 Debezium 连接器。
+ * Enumeration of the database connector types supported by this starter.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public enum ConnectorType {
-    /**
-     * MySQL 连接器
-     */
+    /** MySQL connector. */
     MYSQL,
-    /**
-     * MongoDB 连接器
-     */
+    /** MariaDB connector. */
+    MARIADB,
+    /** MongoDB connector. */
     MONGODB,
-    /**
-     * Oracle 连接器
-     */
+    /** Oracle connector. */
     ORACLE,
-    /**
-     * PostgreSQL 连接器
-     */
+    /** PostgreSQL connector. */
     POSTGRESQL,
-    /**
-     * SqlServer 连接器
-     */
+    /** Microsoft SQL Server connector. */
     SQLSERVER,
-    /**
-     * DB2 连接器
-     */
+    /** IBM Db2 connector. */
     DB2,
-    /**
-     * Vitess 连接器
-     */
+    /** Cassandra connector. */
+    CASSANDRA,
+    /** Vitess connector. */
     VITESS,
-    /**
-     * 自定义连接器
-     */
+    /** Google Cloud Spanner connector. */
+    SPANNER,
+    /** IBM Informix connector. */
+    INFORMIX,
+    /** User-provided custom connector. */
     CUSTOM
 }

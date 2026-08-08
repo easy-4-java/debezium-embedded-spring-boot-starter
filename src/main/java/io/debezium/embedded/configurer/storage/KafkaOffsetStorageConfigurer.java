@@ -5,15 +5,18 @@ import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * Kafka 型 Offset 存储配置。
+ * {@link OffsetStorageConfigurer} for Kafka topic based offset storage.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class KafkaOffsetStorageConfigurer implements OffsetStorageConfigurer {
 
     /**
-     * 应用存储配置。
+     * Applies the storage configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 存储配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the offset-storage configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
@@ -24,8 +27,6 @@ public class KafkaOffsetStorageConfigurer implements OffsetStorageConfigurer {
         map.from(kafka::getTopic).whenHasText().to(value -> builder.with("offset.storage.topic", value));
         map.from(kafka::getPartitions).to(value -> builder.with("offset.storage.partitions", value));
         map.from(kafka::getReplicationFactor).to(value -> builder.with("offset.storage.replication.factor", value));
-        map.from(kafka::getFlushIntervalMs).to(value -> builder.with("offset.flush.interval.ms", value));
-        map.from(kafka::getFlushTimeoutMs).to(value -> builder.with("offset.flush.timeout.ms", value));
     }
 }
 

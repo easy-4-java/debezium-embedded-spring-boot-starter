@@ -1,46 +1,46 @@
 package io.debezium.embedded.annotation.event;
 
-import io.debezium.data.Envelope;
 import io.debezium.embedded.annotation.OnDebeziumEvent;
+import io.debezium.embedded.protocol.DebeziumEntry;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
 /**
- * 更新操作监听器
- * 发生update时会触发
+ * Listener for {@link DebeziumEntry.EventType#UPDATE} events.
+ * <p>Methods annotated with this are invoked when a record is updated in the
+ * matching table.</p>
  *
- * @author lujun
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@OnDebeziumEvent(operations = Envelope.Operation.UPDATE)
+@OnDebeziumEvent(eventType = DebeziumEntry.EventType.UPDATE)
 public @interface OnUpdateEvent {
 
     /**
-     * debezium 指令
-     * default for all
+     * Connector destination name. Defaults to empty, meaning any destination.
      *
-     * @return debezium destination
+     * @return the destination name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String destination() default "";
 
     /**
-     * 数据库实例
+     * Database schema name to match.
      *
-     * @return debezium destination
+     * @return the schema name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String schema();
 
     /**
-     * 监听的表
-     * default for all
+     * Table name to listen on. Defaults to any table.
      *
-     * @return debezium destination
+     * @return the table name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String table();

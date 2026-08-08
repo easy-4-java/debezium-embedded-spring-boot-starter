@@ -1,37 +1,45 @@
 package io.debezium.embedded.factory;
 
 
-import io.debezium.embedded.handler.RowEntryHandler;
+import io.debezium.embedded.enums.TableNameEnum;
+import io.debezium.embedded.handler.RecordChangeEventEntryHandler;
 import io.debezium.embedded.util.GenericUtil;
-
-import java.util.Objects;
+import io.debezium.embedded.util.HandlerUtil;
 
 /**
- * 抽象模型工厂
+ * Base {@link IModelFactory} implementation that resolves the target row type
+ * from the handler's generic signature and delegates to a subclass for the
+ * concrete instantiation.
+ * <p>Handlers bound to the wildcard {@link TableNameEnum#ALL} table receive
+ * the raw payload unchanged.</p>
  *
- * @param <T> 模型类型
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public abstract class AbstractModelFactory<T> implements IModelFactory<T> {
 
-    /**
-     * 创建模型实例
-     * 
-     * @param entryHandler 记录变更事件处理器
-     * @param input 输入对象
-     * @return 模型实例
-     * @throws Exception 异常
-     */
+    /** {@inheritDoc} */
     @Override
-    public <R> R newInstance(T input, RowEntryHandler<R> entryHandler) throws Exception {
-        // 1、获取泛型类型
-        Class<R> genericType = GenericUtil.getGenericType(entryHandler);
-        // 2、如果泛型类型为空，则抛出异常
-        if (Objects.isNull(genericType)) {
-            throw new RuntimeException("genericType not found form entryHandler : " + entryHandler.getClass());
+    public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, T t) throws Exception {
+        String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
+        if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {
+            return (R) t;
         }
-        // 3、创建模型实例
-        return this.newInstance(input, genericType);
+        Class<R> tableClass = GenericUtil.getTableClass(entryHandler);
+        if (tableClass != null) {
+            return newInstance(tableClass, t);
+        }
+        return null;
     }
 
-    abstract <R> R newInstance(T input, Class<R> genericType) throws Exception;
+    /**
+     * Instantiates a new row model of the supplied type from the raw payload.
+     *
+     * @param tableClass the target row type
+     * @param t          the raw payload
+     * @param <R>        the row model type
+     * @return the materialised row model
+     * @throws Exception if instantiation fails
+     */
+    abstract <R> R newInstance(Class<R> tableClass, T t) throws Exception;
 }

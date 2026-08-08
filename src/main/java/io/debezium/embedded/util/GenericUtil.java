@@ -1,42 +1,93 @@
 package io.debezium.embedded.util;
 
+
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import io.debezium.embedded.handler.RowEntryHandler;
-import io.debezium.embedded.handler.RowEvent;
-import org.springframework.core.ResolvableType;
+import io.debezium.embedded.handler.RecordChangeEventEntryHandler;
+import io.debezium.embedded.model.DebeziumModel;
+import io.debezium.embedded.protocol.DebeziumEntry;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 泛型工具类
+ * Reflection utilities for resolving generic types and assembling invocation
+ * arguments for annotation based event handlers.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
-@SuppressWarnings("unchecked")
 public class GenericUtil {
 
-    private static final Map<Class<?>, Class<?>> CACHE = new ConcurrentHashMap<>();
+    private static Map<Class<? extends RecordChangeEventEntryHandler>, Class> cache = new ConcurrentHashMap<>();
 
-    public static Object[] getInvokeArgs(Method method, RowEvent rowEvent) {
+    /**
+     * Builds the argument array for an annotation based handler method, binding
+     * the model, row-change and event-type to matching parameters.
+     *
+     * @param method     the handler method to bind for
+     * @param model      the current change model
+     * @param rowChange  the row change payload
+     * @param eventType  the event type
+     * @return the argument array in declaration order
+     */
+    public static Object[] getInvokeArgs(Method method, DebeziumModel model, DebeziumEntry.RowChange rowChange, DebeziumEntry.EventType eventType) {
         return Arrays.stream(method.getParameterTypes()).map(pClass -> {
-                    if(RowEvent.class.isAssignableFrom(pClass)){
-                        return rowEvent;
+                    if(DebeziumModel.class.isAssignableFrom(pClass)){
+                        return model;
+                    }
+                    if(DebeziumEntry.RowChange.class.isAssignableFrom(pClass)) {
+                        return rowChange;
+                    }
+                    if(DebeziumEntry.EventType.class.isAssignableFrom(pClass)) {
+                        return eventType;
                     }
                     return null;
                 })
                 .toArray();
     }
 
-    public static String getTableName(RowEntryHandler<?> entryHandler) {
-        Class<?> tableClass = getGenericType(entryHandler);
+    /**
+     * Builds the argument array for an annotation based handler method, binding
+     * the model, row data list and event-type to matching parameters.
+     *
+     * @param method     the handler method to bind for
+     * @param model      the current change model
+     * @param rowData    the row data payload as a list of column maps
+     * @param eventType  the event type
+     * @return the argument array in declaration order
+     */
+    public static Object[] getInvokeArgs(Method method, DebeziumModel model, List<Map<String, String>> rowData, DebeziumEntry.EventType eventType) {
+        return Arrays.stream(method.getParameterTypes()).map(pClass -> {
+                if(DebeziumModel.class.isAssignableFrom(pClass)){
+                    return model;
+                }
+                if(List.class.isAssignableFrom(pClass)) {
+                    return rowData;
+                }
+                if(DebeziumEntry.EventType.class.isAssignableFrom(pClass)) {
+                    return eventType;
+                }
+                return null;
+            }).toArray();
+    }
+
+    /**
+     * Resolves the MyBatis-Plus table name for the handler's generic row type.
+     *
+     * @param entryHandler the handler to inspect
+     * @return the resolved table name, or {@code null} when unavailable
+     */
+    public static String getTableGenericProperties(RecordChangeEventEntryHandler entryHandler) {
+        Class<?> tableClass = getTableClass(entryHandler);
         if (tableClass != null) {
-            // 3.2、获取 mybatis-plus 的注解信息
+            // Read MyBatis-Plus table metadata
             TableInfo tableInfo = TableInfoHelper.getTableInfo(tableClass);
             if (Objects.nonNull(tableInfo)) {
                 return tableInfo.getTableName();
@@ -45,120 +96,32 @@ public class GenericUtil {
         return null;
     }
 
-    public static <T> Class<T> getGenericType(RowEntryHandler<?> entryHandler) {
-        // 1、获取处理器的类型
-        Class<?> handlerClass = entryHandler.getClass();
-        // 2、从缓存中获取处理器的类型
-        Class<?> tableClass = CACHE.get(handlerClass);
-        if (Objects.isNull(tableClass)) {
-            // 3、使用改进的方法获取泛型类型
-            Class<?> genericType = getInterfaceGenericType(handlerClass, RowEntryHandler.class, 0);
-            if (genericType != null) {
-                CACHE.putIfAbsent(handlerClass, genericType);
-                return (Class<T>) genericType;
-            }
-        }
-        return (Class<T>) tableClass;
-    }
 
     /**
-     * 获取类的泛型类型
+     * Resolves the concrete row model type declared by a handler.
+     *
+     * @param object the handler instance
+     * @param <T>    the row model type
+     * @return the resolved {@link Class}, or {@code null} when not parameterised
      */
-    public static <T> Class<T> getGenericType(Class<T> clazz, int index) {
-        try {
-            ResolvableType resolvableType = ResolvableType.forClass(clazz);
-            ResolvableType genericType = resolvableType.getGeneric(index);
-            Class<?> genericClass = genericType.resolve();
-            return genericClass == null ? null : (Class<T>) genericClass;
-        } catch (Exception e) {
-            throw new RuntimeException("获取类[" + clazz.getName() + "]泛型类型失败." , e);
-        }
-    }
-
-    /**
-     * 获取接口的泛型类型
-     * 
-     * @param clazz 实现类
-     * @param interfaceClass 接口类
-     * @param index 泛型参数索引
-     * @return 泛型类型
-     */
-    public static <T> Class<T> getInterfaceGenericType(Class<?> clazz, Class<?> interfaceClass, int index) {
-        try {
-            // 获取所有实现的接口
-            Type[] genericInterfaces = clazz.getGenericInterfaces();
-            for (Type genericInterface : genericInterfaces) {
-                if (genericInterface instanceof ParameterizedType) {
-                    ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
-                    // 检查是否是目标接口
-                    if (parameterizedType.getRawType().equals(interfaceClass)) {
-                        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-                        if (index >= 0 && index < actualTypeArguments.length) {
-                            Type actualType = actualTypeArguments[index];
-                            if (actualType instanceof Class) {
-                                return (Class<T>) actualType;
-                            } else if (actualType instanceof ParameterizedType) {
-                                return (Class<T>) ((ParameterizedType) actualType).getRawType();
-                            }
-                        }
-                    }
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getTableClass(RecordChangeEventEntryHandler object) {
+        // Resolve the handler's generic type argument
+        Class<? extends RecordChangeEventEntryHandler> handlerClass = object.getClass();
+        Class tableClass = cache.get(handlerClass);
+        if (tableClass == null) {
+            Type[] interfacesTypes = handlerClass.getGenericInterfaces();
+            for (Type t : interfacesTypes) {
+                Class c = (Class) ((ParameterizedType) t).getRawType();
+                if (c.equals(RecordChangeEventEntryHandler.class)) {
+                    tableClass = (Class<T>) ((ParameterizedType) t).getActualTypeArguments()[0];
+                    cache.putIfAbsent(handlerClass, tableClass);
+                    return tableClass;
                 }
             }
-            
-            // 如果没有找到，尝试从父类查找
-            Class<?> superClass = clazz.getSuperclass();
-            if (superClass != null && !superClass.equals(Object.class)) {
-                return getInterfaceGenericType(superClass, interfaceClass, index);
-            }
-            
-            return null;
-        } catch (Exception e) {
-            throw new RuntimeException("获取接口[" + interfaceClass.getName() + "]泛型类型失败.", e);
         }
+        return tableClass;
     }
 
-    /**
-     * 获取字段的泛型类型
-     */
-    public static <T> Class<T> getFieldGenericType(Class<T> clazz, String fieldName, int index) {
-        try {
-            Field field = clazz.getDeclaredField(fieldName);
-            ResolvableType resolvableType = ResolvableType.forField(field, clazz);
-            ResolvableType genericType = resolvableType.getGeneric(index);
-            Class<?> genericClass = genericType.resolve();
-            return genericClass == null ? null : (Class<T>) genericClass;
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException("字段不存在: " + fieldName, e);
-        } catch (Exception e) {
-            throw new RuntimeException("获取字段[" + fieldName + "]泛型类型失败.", e);
-        }
-    }
 
-    /**
-     * 获取方法参数的泛型类型
-     */
-    public static <T> Class<T> getMethodParameterGenericType(Method method, int parameterIndex, int genericIndex) {
-        try {
-            ResolvableType resolvableType = ResolvableType.forMethodParameter(method, parameterIndex);
-            ResolvableType genericType = resolvableType.getGeneric(genericIndex);
-            Class<?> genericClass = genericType.resolve();
-            return genericClass == null ? null : (Class<T>) genericClass;
-        } catch (Exception e) {
-            throw new RuntimeException("获取方法[" + method.getName() + "]参数[" + parameterIndex + "]泛型类型失败." , e);
-        }
-    }
-
-    /**
-     * 获取方法返回值的泛型类型
-     */
-    public static <T> Class<T> getMethodReturnGenericType(Method method, int index) {
-        try {
-            ResolvableType resolvableType = ResolvableType.forMethodReturnType(method);
-            ResolvableType genericType = resolvableType.getGeneric(index);
-            Class<?> genericClass = genericType.resolve();
-            return genericClass == null ? null : (Class<T>) genericClass;
-        } catch (Exception e) {
-            throw new RuntimeException("获取方法[" + method.getName() + "]返回值泛型类型失败." , e);
-        }
-    }
 }

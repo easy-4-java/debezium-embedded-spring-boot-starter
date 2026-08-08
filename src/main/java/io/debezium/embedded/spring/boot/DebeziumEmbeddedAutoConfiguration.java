@@ -5,13 +5,13 @@ import io.debezium.embedded.Connect;
 import io.debezium.embedded.client.DebeziumEmbeddedClient;
 import io.debezium.embedded.configurer.connector.ConnectorConfigurer;
 import io.debezium.embedded.configurer.connector.ConnectorConfigurerFactory;
-import io.debezium.embedded.configurer.history.DatabaseHistoryConfigurer;
-import io.debezium.embedded.configurer.history.DatabaseHistoryConfigurerFactory;
+import io.debezium.embedded.configurer.history.SchemaHistoryConfigurer;
+import io.debezium.embedded.configurer.history.SchemaHistoryConfigurerFactory;
 import io.debezium.embedded.configurer.storage.OffsetStorageConfigurer;
 import io.debezium.embedded.configurer.storage.OffsetStorageConfigurerFactory;
 import io.debezium.embedded.factory.MapColumnModelFactory;
 import io.debezium.embedded.handler.*;
-import io.debezium.embedded.handler.impl.RowEventHandlerImpl;
+import io.debezium.embedded.handler.impl.MapRowDataHandlerImpl;
 import io.debezium.engine.ChangeEvent;
 import io.debezium.engine.DebeziumEngine;
 import io.debezium.engine.RecordChangeEvent;
@@ -33,12 +33,32 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Debezium Embedded 自动配置
- * 支持多个数据库实例的 Embedded 模式，支持多种数据库连接器
+ * Spring Boot auto-configuration for the Debezium Embedded engine.
+ * <p>
+ * Activates when {@link DebeziumEngine} is on the classpath. It wires up the
+ * supporting beans (completion callback, row-data handler, change-event handlers)
+ * and constructs one {@link DebeziumEmbeddedClient} per configured instance under
+ * the {@code debezium.instances.*} namespace. Multiple database connectors
+ * (MySQL, PostgreSQL, MongoDB, Oracle, SQL Server, Cassandra, Spanner, etc.)
+ * are supported through the connector, offset-storage and schema-history
+ * configurer SPI.
+ * </p>
+ *
+ * <h3>Configuration</h3>
+ * <ul>
+ *   <li>{@code debezium.instances[*].connector.destination} — unique name of the connector instance</li>
+ *   <li>{@code debezium.instances[*].event-type} — {@code CHANGE_EVENT} (JSON) or {@code RECORD_CHANGE_EVENT} (Connect)</li>
+ *   <li>{@code debezium.instances[*].connector.type} — database connector type (default {@code MYSQL})</li>
+ *   <li>{@code debezium.thread-pool.*} — executor tuning for the embedded engine</li>
+ * </ul>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @org.springframework.context.annotation.Configuration
 @ConditionalOnClass({ DebeziumEngine.class })
@@ -48,10 +68,19 @@ import java.util.stream.Collectors;
 public class DebeziumEmbeddedAutoConfiguration {
 
     /**
-     * Default completion callback which just logs the error. If connector finishes successfully it does nothing.
+     * Default {@link DebeziumEngine.CompletionCallback} that logs failures and
+     * does nothing on success. Used when the application does not provide its own
+     * completion callback bean.
      */
     @Slf4j
     public static class DefaultCompletionCallback implements DebeziumEngine.CompletionCallback {
+        /**
+         * Logs the supplied message and error when the engine did not finish successfully.
+         *
+         * @param success {@code true} if the engine completed normally, {@code false} on error
+         * @param message human-readable description of the completion result
+         * @param error   the throwable that caused the failure, or {@code null} on success
+         */
         @Override
         public void handle(final boolean success, final String message, final Throwable error) {
             if (!success) {
@@ -60,34 +89,74 @@ public class DebeziumEmbeddedAutoConfiguration {
         }
     }
 
+    /**
+     * Registers the default completion callback unless the application defines its own.
+     *
+     * @return a {@link DefaultCompletionCallback} instance
+     */
     @Bean
     @ConditionalOnMissingBean
     public DebeziumEngine.CompletionCallback completionCallback() {
         return new DefaultCompletionCallback();
     }
 
+    /**
+     * Registers the default row-data handler that materialises change-event payloads
+     * into a list of column maps using a {@link MapColumnModelFactory}.
+     *
+     * @return a {@link MapRowDataHandlerImpl} backed by {@link MapColumnModelFactory}
+     */
     @Bean
     @ConditionalOnMissingBean
-    public RowEventHandler recordRowDataHandler() {
-        return new RowEventHandlerImpl(new MapColumnModelFactory());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ChangeEventHandler changeEventHandler(RowEventHandler rowEventHandler,
-                                                 ObjectProvider<RowEntryHandler<?>> entryHandlerProvider) {
-        return new DefaultChangeEventHandler(entryHandlerProvider.stream().collect(Collectors.toList()), rowEventHandler);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public RecordChangeEventHandler recordChangeEventHandler(RowEventHandler rowEventHandler,
-                                                             ObjectProvider<RowEntryHandler<?>> entryHandlerProvider) {
-        return new DefaultRecordChangeEventHandler(entryHandlerProvider.stream().collect(Collectors.toList()), rowEventHandler);
+    public RowDataHandler<List<Map<String, String>>> recordRowDataHandler() {
+        return new MapRowDataHandlerImpl(new MapColumnModelFactory());
     }
 
     /**
-     * 初始化 DebeziumEmbeddedClient
+     * Registers the default {@link ChangeEventHandler} for {@code CHANGE_EVENT} instances.
+     *
+     * @param rowDataHandler       the row-data handler used to materialise payloads
+     * @param entryHandlerProvider object provider for optional {@link RecordChangeEventEntryHandler} beans
+     * @return a {@link DefaultChangeEventHandler} backed by the supplied handlers
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public ChangeEventHandler changeEventHandler(RowDataHandler<List<Map<String, String>>> rowDataHandler,
+                                                                 ObjectProvider<RecordChangeEventEntryHandler> entryHandlerProvider) {
+        return new DefaultChangeEventHandler(entryHandlerProvider.stream().collect(Collectors.toList()), rowDataHandler);
+    }
+
+    /**
+     * Registers the default {@link RecordChangeEventHandler} for {@code RECORD_CHANGE_EVENT} instances.
+     *
+     * @param rowDataHandler       the row-data handler used to materialise payloads
+     * @param entryHandlerProvider object provider for optional {@link RecordChangeEventEntryHandler} beans
+     * @return a {@link DefaultRecordChangeEventHandler} backed by the supplied handlers
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public RecordChangeEventHandler recordChangeEventHandler(RowDataHandler<List<Map<String, String>>> rowDataHandler,
+                                                                ObjectProvider<RecordChangeEventEntryHandler> entryHandlerProvider) {
+        return new DefaultRecordChangeEventHandler(entryHandlerProvider.stream().collect(Collectors.toList()), rowDataHandler);
+    }
+
+    /**
+     * Builds and starts the singleton {@link DebeziumEmbeddedClient} that owns all
+     * configured Debezium engine instances. Each entry under
+     * {@code debezium.instances} is turned into a {@link DebeziumEngine} of the
+     * appropriate format (JSON change events or Connect record-change events),
+     * then handed to the client which runs them on the dedicated executor.
+     *
+     * @param properties                     the bound {@code debezium.*} configuration
+     * @param clockProvider                  optional {@link Clock} provider, defaults to system clock
+     * @param completionCallbackProvider     optional engine completion callback
+     * @param connectorCallbackProvider      optional engine connector callback
+     * @param offsetCommitPolicyProvider     optional offset commit policy, defaults to {@code always}
+     * @param changeEventHandlerProvider     optional {@link ChangeEventHandler} for JSON events
+     * @param recordChangeEventHandlerProvider optional {@link RecordChangeEventHandler} for Connect events
+     * @param debeziumTaskExecutor           the executor used to run the engines
+     * @return a started {@link DebeziumEmbeddedClient}
+     * @throws IllegalStateException if no change-event handler is available or no instances are configured
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public DebeziumEmbeddedClient singleDebeziumEmbeddedClient(DebeziumEmbeddedProperties properties,
@@ -129,7 +198,7 @@ public class DebeziumEmbeddedAutoConfiguration {
             DebeziumAsyncEngineProperties asyncEngineProperties = instance.getAsync();
             DebeziumConnectorProperties connectorProperties = instance.getConnector();
             DebeziumOffsetStorageProperties storageProperties = instance.getOffsetStorage();
-            DebeziumDatabaseHistoryProperties historyProperties = instance.getDatabaseHistory();
+            DebeziumSchemaHistoryProperties historyProperties = instance.getSchemaHistory();
 
             // 1. 创建基础配置
             Configuration.Builder builder = Configuration.create()
@@ -152,7 +221,7 @@ public class DebeziumEmbeddedAutoConfiguration {
             storageConfigurer.apply(builder, storageProperties);
 
             // 4. 交由历史配置器写入数据库历史配置
-            DatabaseHistoryConfigurer historyConfigurer = DatabaseHistoryConfigurerFactory.from(historyProperties);
+            SchemaHistoryConfigurer historyConfigurer = SchemaHistoryConfigurerFactory.from(historyProperties);
             historyConfigurer.apply(builder, historyProperties);
 
             Configuration config = builder.build();
