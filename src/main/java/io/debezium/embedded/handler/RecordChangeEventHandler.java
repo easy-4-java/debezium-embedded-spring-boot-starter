@@ -8,16 +8,21 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * 消息处理器
+ * Functional handler for a batch of {@link RecordChangeEvent}s emitted by the engine.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface RecordChangeEventHandler {
 
     /**
-     * 处理消息
-     * @param recordChangeEvents 数据变动事件对象集合
-     * @param recordCommitter 的
-     * @param props 配置
+     * Handles a batch of record change events and acknowledges them through
+     * the supplied committer.
+     *
+     * @param recordChangeEvents the batch of record change events to process
+     * @param recordCommitter    the committer used to acknowledge processed records
+     * @param props              the Debezium engine configuration as properties
      */
     void handleEvent(List<RecordChangeEvent<SourceRecord>> recordChangeEvents,
                      DebeziumEngine.RecordCommitter<RecordChangeEvent<SourceRecord>> recordCommitter,

@@ -7,9 +7,12 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * 刪除表操作监听器
+ * Listener for {@link DebeziumEntry.EventType#TRUNCATE} events.
+ * <p>Methods annotated with this are invoked when a matching table is
+ * truncated.</p>
  *
- * @author lujun
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 
 @Target({ElementType.METHOD})
@@ -18,16 +21,17 @@ import java.lang.annotation.*;
 @OnDebeziumEvent(eventType = DebeziumEntry.EventType.TRUNCATE)
 public @interface OnTruncateTableEvent {
     /**
-     * debezium 指令
-     * default for all
-     *  @return debezium destination
+     * Connector destination name. Defaults to empty, meaning any destination.
+     *
+     * @return the destination name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String destination() default "";
 
     /**
-     * 数据库实例
-     * @return 数据库实例
+     * Database schema name to match.
+     *
+     * @return the schema name
      */
     @AliasFor(annotation = OnDebeziumEvent.class)
     String schema();

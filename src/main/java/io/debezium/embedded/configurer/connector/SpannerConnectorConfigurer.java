@@ -5,7 +5,10 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 
 /**
- * Spanner 连接器配置器。
+ * {@link ConnectorConfigurer} for the Debezium Google Cloud Spanner connector.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class SpannerConnectorConfigurer implements ConnectorConfigurer {
     @Override
@@ -17,14 +20,14 @@ public class SpannerConnectorConfigurer implements ConnectorConfigurer {
          */
         PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
-        // 基础连接配置
+        // Base connection configuration
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
         
-        // 数据库和表过滤
+        // Database and table filtering
         map.from(properties::getDatabaseIncludeList).whenHasText().to(value -> builder.with("database.include.list", value));
         map.from(properties::getTableIncludeList).whenHasText().to(value -> builder.with("table.include.list", value));
         
-        // Spanner 特定配置
+        // Spanner specific configuration
         if (properties.getSpanner() != null) {
             DebeziumConnectorProperties.Spanner spanner = properties.getSpanner();
             map.from(spanner::getConnectionString).whenHasText().to(value -> builder.with("spanner.connection.string", value));
@@ -35,11 +38,11 @@ public class SpannerConnectorConfigurer implements ConnectorConfigurer {
             map.from(spanner::getInstanceId).whenHasText().to(value -> builder.with("spanner.instance.id", value));
             map.from(spanner::getDatabaseId).whenHasText().to(value -> builder.with("spanner.database.id", value));
             
-            // 事件处理配置
+            // Event processing configuration
             map.from(spanner::getTombstonesOnDelete).to(value -> builder.with("tombstones.on.delete", value));
             map.from(spanner::getIncludeQuery).to(value -> builder.with("include.query", value));
             
-            // 性能优化配置
+            // Performance optimisation configuration
             map.from(spanner::getPollIntervalMs).to(value -> builder.with("poll.interval.ms", value));
             map.from(spanner::getMaxQueueSize).to(value -> builder.with("max.queue.size", value));
             map.from(spanner::getMaxBatchSize).to(value -> builder.with("max.batch.size", value));

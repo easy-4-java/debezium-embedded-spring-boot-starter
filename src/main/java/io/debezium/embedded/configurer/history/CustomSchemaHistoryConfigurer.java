@@ -4,15 +4,18 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 
 /**
- * 自定义数据库历史记录配置器。
+ * {@link SchemaHistoryConfigurer} for user-provided custom schema-history backends.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class CustomSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     
     /**
-     * 应用数据库历史记录配置。
+     * Applies the configuration to the supplied builder.
      *
-     * @param builder 配置构建器
-     * @param properties 数据库历史记录配置属性
+     * @param builder    the Debezium configuration builder to mutate
+     * @param properties the configuration properties
      */
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
@@ -21,7 +24,7 @@ public class CustomSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         if (custom.getHistoryClass() != null) {
             builder.with("schema.history.internal", custom.getHistoryClass());
             
-            // 添加自定义配置属性
+            // Forward custom raw properties
             if (custom.getProps() != null) {
                 custom.getProps().forEach((key, value) -> {
                     if (key.startsWith("schema.history.internal.")) {

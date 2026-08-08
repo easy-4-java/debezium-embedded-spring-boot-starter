@@ -5,15 +5,19 @@ import io.debezium.engine.ChangeEvent;
 import java.util.Properties;
 
 /**
- * ChangeEvent 处理器
+ * Functional handler for a single JSON {@link ChangeEvent} emitted by the engine.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface ChangeEventHandler {
 
     /**
-     * 处理消息
-     * @param changeEvent 数据变动事件对象
-     * @param props 配置
+     * Handles a single change event.
+     *
+     * @param changeEvent the change event to process
+     * @param props       the Debezium engine configuration as properties
      */
     void handleEvent(ChangeEvent<String, String> changeEvent, Properties props);
 
