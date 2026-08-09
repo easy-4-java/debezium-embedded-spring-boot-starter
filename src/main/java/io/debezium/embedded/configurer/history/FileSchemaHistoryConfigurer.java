@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.history;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link SchemaHistoryConfigurer} for file based schema history.
@@ -28,7 +29,7 @@ public class FileSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         map.from(file::getFilename).whenHasText().to(value -> builder.with("schema.history.internal.file", value));
 
     }

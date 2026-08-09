@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.history;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link SchemaHistoryConfigurer} for JDBC based schema history.
@@ -27,7 +28,7 @@ public class JdbcSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         // Base connection configuration
         map.from(jdbc::getUrl).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.connection.url", value));

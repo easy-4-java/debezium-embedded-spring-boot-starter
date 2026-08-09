@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.history;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link SchemaHistoryConfigurer} for RocketMQ based schema history.
@@ -22,7 +23,7 @@ public class RocketMqSchemaHistoryConfigurer implements SchemaHistoryConfigurer 
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.RocketMq rocketMq = properties.getRocketMq();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         builder.with("schema.history.internal", "io.debezium.storage.rocketmq.history.RocketMqSchemaHistory");
         

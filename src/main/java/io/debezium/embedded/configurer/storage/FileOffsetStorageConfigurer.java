@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.storage;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link OffsetStorageConfigurer} for file based offset storage.
@@ -21,7 +22,7 @@ public class FileOffsetStorageConfigurer implements OffsetStorageConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.File file = properties.getFile();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         // Offset Store
         builder.with("offset.storage", "org.apache.kafka.connect.storage.FileOffsetBackingStore");
         map.from(file::getFileName).whenHasText().to(value -> builder.with("offset.storage.file.filename", value));

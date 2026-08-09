@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.storage;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link OffsetStorageConfigurer} for Kafka topic based offset storage.
@@ -21,7 +22,7 @@ public class KafkaOffsetStorageConfigurer implements OffsetStorageConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.Kafka kafka = properties.getKafka();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         // Offset Store
         builder.with("offset.storage", "org.apache.kafka.connect.storage.KafkaOffsetBackingStore");
         map.from(kafka::getTopic).whenHasText().to(value -> builder.with("offset.storage.topic", value));

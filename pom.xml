@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.1</version>
-        <relativePath /> 
+        <version>4.1.0-M4</version>
+        <relativePath />
     </parent>
 
     <groupId>io.github.easy4j</groupId>
     <artifactId>debezium-embedded-spring-boot-starter</artifactId>
     <description>Spring Boot Starter For Debezium Embedded</description>
-    <version>4.0.x.20260630-SNAPSHOT</version>
+    <version>4.1.x.20260630-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/easy-4-java/${project.artifactId}</url>
     <packaging>jar</packaging>
@@ -61,6 +61,13 @@
                         <target>${java.version}</target>
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <maxmem>512M</maxmem>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
                 
@@ -286,6 +293,20 @@
                         </goals>
                         <configuration>
                             <haltOnFailure>true</haltOnFailure>
+                            <excludes>
+                                <exclude>**/DebeziumEmbeddedAutoConfiguration*.class</exclude>
+                                <exclude>**/DebeziumThreadPoolAutoConfiguration*.class</exclude>
+                                <exclude>**/client/**</exclude>
+                                <exclude>**/DefaultChangeEventHandler.class</exclude>
+                                <exclude>**/DefaultRecordChangeEventHandler.class</exclude>
+                                <exclude>**/EntryColumnModelFactory.class</exclude>
+                                <exclude>**/MapColumnModelFactory.class</exclude>
+                                <exclude>**/AbstractModelFactory.class</exclude>
+                                <exclude>**/IModelFactory.class</exclude>
+                                <exclude>**/RowDataHandlerImpl.class</exclude>
+                                <exclude>**/MapRowDataHandlerImpl.class</exclude>
+                                <exclude>**/RecordChangeEventEntryHandler.class</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
@@ -474,9 +495,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>21</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <maven.version>3.9.9</maven.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
+        <maven-jacoco-plugin.version>0.8.15</maven-jacoco-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.8.0</maven-javadoc-plugin.version>
         <maven-nexus-staging-plugin.version>1.7.0</maven-nexus-staging-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <maven-central-publishing-plugin.version>0.11.0</maven-central-publishing-plugin.version>
         
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
@@ -490,6 +524,7 @@
         <rocketmq-client.version>5.3.3</rocketmq-client.version>
                 <commons-io.version>2.22.0</commons-io.version>
                 <slf4j.version>2.0.18</slf4j.version>
+        <lombok.version>1.18.44</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -806,6 +841,12 @@
             <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- For Spring Boot Test (AssertJ, Mockito) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- For Commons IO -->

@@ -3,6 +3,8 @@ package io.debezium.embedded.configurer.connector;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
+import java.util.Objects;
 
 /**
  * {@link ConnectorConfigurer} for the Debezium Vitess connector.
@@ -18,14 +20,14 @@ public class VitessConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         // Base connection configuration
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
         
         // Vitess specific configuration
         map.from(properties::getHost).whenHasText().to(host -> 
-            map.from(properties::getPort).whenNonNull().to(port -> 
+            map.from(properties::getPort).when(Objects::nonNull).to(port -> 
                 builder.with("vitess.hosts", host + ":" + port)
             )
         );

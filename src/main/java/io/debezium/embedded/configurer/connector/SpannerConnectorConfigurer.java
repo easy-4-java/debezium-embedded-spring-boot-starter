@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.connector;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link ConnectorConfigurer} for the Debezium Google Cloud Spanner connector.
@@ -18,7 +19,7 @@ public class SpannerConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         // Base connection configuration
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));

@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.history;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link SchemaHistoryConfigurer} for Amazon S3 based schema history.
@@ -27,7 +28,7 @@ public class AmazonS3SchemaHistoryConfigurer implements SchemaHistoryConfigurer 
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         // 严格按照官方文档配置参数
         // 必需的 S3 配置

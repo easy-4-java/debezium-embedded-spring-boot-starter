@@ -2,15 +2,17 @@ package io.debezium.embedded.spring.boot.example;
 
 import io.debezium.embedded.handler.RecordChangeEventEntryHandler;
 import io.debezium.embedded.spring.boot.example.entity.User;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
  * 用户表变更事件处理器示例
  */
-@Slf4j
 @Component
 public class UserEventHandlerRecordChangeEvent implements RecordChangeEventEntryHandler<User> {
+
+    private static final Logger log = LoggerFactory.getLogger(UserEventHandlerRecordChangeEvent.class);
 
     @Override
     public void insert(User user) {

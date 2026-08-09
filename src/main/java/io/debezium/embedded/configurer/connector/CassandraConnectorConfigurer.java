@@ -3,6 +3,8 @@ package io.debezium.embedded.configurer.connector;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
+import java.util.Objects;
 
 /**
  * {@link ConnectorConfigurer} for the Debezium Cassandra connector.
@@ -25,7 +27,7 @@ public class CassandraConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         // Base connection configuration
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
@@ -42,7 +44,7 @@ public class CassandraConnectorConfigurer implements ConnectorConfigurer {
             // Fall back to traditional host/port connection when no connection string is set
             if (cassandra.getConnectionString() == null || cassandra.getConnectionString().trim().isEmpty()) {
                 map.from(properties::getHost).whenHasText().to(host -> 
-                    map.from(properties::getPort).whenNonNull().to(port -> 
+                    map.from(properties::getPort).when(Objects::nonNull).to(port -> 
                         builder.with("cassandra.hosts", host + ":" + port)
                     )
                 );

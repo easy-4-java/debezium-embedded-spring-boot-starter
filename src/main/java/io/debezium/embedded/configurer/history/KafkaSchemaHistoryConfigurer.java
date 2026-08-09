@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.history;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link SchemaHistoryConfigurer} for Kafka topic based schema history.
@@ -26,7 +27,7 @@ public class KafkaSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
         
         // 基础配置
         map.from(kafka::getTopic).whenHasText().to(value -> builder.with("schema.history.internal.kafka.topic", value));

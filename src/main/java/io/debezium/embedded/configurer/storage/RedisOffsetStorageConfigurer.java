@@ -3,6 +3,7 @@ package io.debezium.embedded.configurer.storage;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import io.debezium.embedded.util.PropertyMappers;
 
 /**
  * {@link OffsetStorageConfigurer} for Redis based offset storage.
@@ -22,7 +23,7 @@ public class RedisOffsetStorageConfigurer implements OffsetStorageConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.Redis redis = properties.getRedis();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMappers.whenNonNull();
 
         // Offset Store - 严格按照官方文档配置
         builder.with("offset.storage", "io.debezium.storage.redis.offset.RedisOffsetBackingStore");
