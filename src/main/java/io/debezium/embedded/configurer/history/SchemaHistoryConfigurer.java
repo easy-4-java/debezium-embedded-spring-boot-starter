@@ -8,7 +8,7 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
  * Debezium {@link Configuration.Builder}.
  * <p>Each {@link SchemaHistoryType} ships with a dedicated implementation.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public interface SchemaHistoryConfigurer {

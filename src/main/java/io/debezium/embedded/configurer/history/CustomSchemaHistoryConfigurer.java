@@ -6,7 +6,7 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 /**
  * {@link SchemaHistoryConfigurer} for user-provided custom schema-history backends.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class CustomSchemaHistoryConfigurer implements SchemaHistoryConfigurer {

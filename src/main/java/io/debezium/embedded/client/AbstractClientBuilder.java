@@ -17,7 +17,7 @@ import java.util.List;
  * configuring the handlers, engines and executor before {@link #build()}.</p>
  *
  * @param <D> the concrete client type produced by this builder
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Accessors(chain = true)
