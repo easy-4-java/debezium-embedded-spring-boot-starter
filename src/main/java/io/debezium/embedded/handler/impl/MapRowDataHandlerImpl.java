@@ -16,7 +16,7 @@ import java.util.Objects;
  * {@code [after, before]}; for {@code CREATE} and {@code DELETE} a single
  * element is expected.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class MapRowDataHandlerImpl implements RowDataHandler<List<Map<String, String>>> {

@@ -27,7 +27,7 @@ import java.util.function.Function;
  * Thread-pool configuration for the Debezium embedded engine executor.
  * <p>Bound to the {@code debezium.thread-pool.*} namespace.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(DebeziumThreadPoolProperties.PREFIX)
