@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * <p>The destination, schema, table and event type selectors can be combined
  * to narrow the set of events the listener accepts.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 

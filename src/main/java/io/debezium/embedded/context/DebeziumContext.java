@@ -9,7 +9,7 @@ import io.debezium.embedded.model.DebeziumModel;
  * propagated across thread boundaries when the executor hands work off to
  * other threads.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class DebeziumContext {

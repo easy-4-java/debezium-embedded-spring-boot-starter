@@ -6,7 +6,7 @@ import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 /**
  * {@link OffsetStorageConfigurer} for user-provided custom offset-storage backends.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class CustomOffsetStorageConfigurer implements OffsetStorageConfigurer {

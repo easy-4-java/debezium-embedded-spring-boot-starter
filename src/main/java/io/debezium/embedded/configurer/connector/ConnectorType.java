@@ -3,7 +3,7 @@ package io.debezium.embedded.configurer.connector;
 /**
  * Enumeration of the database connector types supported by this starter.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public enum ConnectorType {

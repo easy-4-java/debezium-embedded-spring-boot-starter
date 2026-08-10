@@ -7,7 +7,7 @@ import io.debezium.embedded.protocol.DebeziumEntry;
  * {@link RecordChangeEventEntryHandler}.
  *
  * @param <T> the raw row payload type
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public interface RowDataHandler<T> {
