@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.PropertyMapper;
 /**
  * {@link ConnectorConfigurer} for the Debezium Microsoft SQL Server connector.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class SqlServerConnectorConfigurer implements ConnectorConfigurer {

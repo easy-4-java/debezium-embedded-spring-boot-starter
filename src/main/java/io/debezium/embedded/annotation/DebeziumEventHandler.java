@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * <p>Meta-annotated with {@link Component} so annotated beans are picked up
  * by component scanning and registered with the application context.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Target({ElementType.TYPE})

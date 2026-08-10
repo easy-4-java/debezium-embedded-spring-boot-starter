@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * MapColumnModelFactory使用示例
  * 
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @date 2025-01-27
  */
 public class MapColumnModelFactoryExample {

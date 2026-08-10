@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  *   <li>{@code debezium.thread-pool.*} — executor tuning for the embedded engine</li>
  * </ul>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @org.springframework.context.annotation.Configuration

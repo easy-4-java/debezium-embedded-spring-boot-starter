@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.PropertyMapper;
  * configuration keys documented by Debezium, including snapshot, GTID,
  * connection, security and performance tuning.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/connectors/mysql.html">MySQL Connector Documentation</a>
  */
