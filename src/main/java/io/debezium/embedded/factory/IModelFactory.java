@@ -11,7 +11,7 @@ import java.util.Set;
  * {@link RecordChangeEventEntryHandler}.
  *
  * @param <T> the raw payload type (e.g. list of columns, map of values)
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public interface IModelFactory<T> {

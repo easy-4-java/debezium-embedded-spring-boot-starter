@@ -6,7 +6,7 @@ import java.util.StringJoiner;
  * Table name combination constants used when matching handlers to tables.
  * <p>The {@link #ALL} wildcard matches any destination/schema/table.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public enum TableNameEnum {

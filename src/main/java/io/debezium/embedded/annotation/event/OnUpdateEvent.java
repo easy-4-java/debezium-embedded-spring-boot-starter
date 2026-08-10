@@ -11,7 +11,7 @@ import java.lang.annotation.*;
  * <p>Methods annotated with this are invoked when a record is updated in the
  * matching table.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 

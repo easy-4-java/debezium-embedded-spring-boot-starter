@@ -6,7 +6,7 @@ import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
  * Factory that resolves the {@link ConnectorConfigurer} implementation matching
  * the connector type declared on the supplied properties.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class ConnectorConfigurerFactory {

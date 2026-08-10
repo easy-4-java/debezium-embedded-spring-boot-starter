@@ -6,7 +6,7 @@ import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
  * Factory that resolves the {@link OffsetStorageConfigurer} implementation
  * matching the offset-storage type declared on the supplied properties.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/configuration/storage.html">storage.html</a>
  */

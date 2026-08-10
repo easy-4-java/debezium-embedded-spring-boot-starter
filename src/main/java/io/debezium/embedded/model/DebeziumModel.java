@@ -9,7 +9,7 @@ import lombok.Setter;
 /**
  * Lightweight model describing a single change event processed by the handler.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Setter

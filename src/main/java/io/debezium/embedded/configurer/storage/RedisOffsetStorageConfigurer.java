@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.PropertyMapper;
 /**
  * {@link OffsetStorageConfigurer} for Redis based offset storage.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  * @see <a href="https://debezium.io/documentation/reference/3.2/configuration/storage.html">storage.html</a>
  */
