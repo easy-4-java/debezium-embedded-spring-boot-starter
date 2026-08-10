@@ -13,7 +13,7 @@ import io.debezium.embedded.util.HandlerUtil;
  * <p>Handlers bound to the wildcard {@link TableNameEnum#ALL} table receive
  * the raw payload unchanged.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public abstract class AbstractModelFactory<T> implements IModelFactory<T> {

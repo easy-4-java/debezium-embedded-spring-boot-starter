@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * <p>Handles the registration, lookup by {@code schema.table} combination,
  * and the annotation based filtering used by the annotation dispatch path.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class HandlerUtil {
