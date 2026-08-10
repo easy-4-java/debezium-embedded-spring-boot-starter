@@ -11,7 +11,7 @@ import java.util.List;
  * <p>Holds row-level change data ({@link RowData}, {@link Column}, {@link RowChange})
  * and the {@link EventType} enumeration mapping to {@link Envelope.Operation}.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class DebeziumEntry {

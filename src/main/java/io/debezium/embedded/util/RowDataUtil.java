@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Utility methods for reading column values from a {@link DebeziumEntry.RowData}.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class RowDataUtil {

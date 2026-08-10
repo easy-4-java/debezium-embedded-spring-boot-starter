@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * {@link ConnectorConfigurer} for the Debezium IBM Informix connector.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class InformixConnectorConfigurer implements ConnectorConfigurer {

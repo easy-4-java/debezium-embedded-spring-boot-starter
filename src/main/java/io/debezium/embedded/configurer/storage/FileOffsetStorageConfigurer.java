@@ -8,7 +8,7 @@ import io.debezium.embedded.util.PropertyMappers;
 /**
  * {@link OffsetStorageConfigurer} for file based offset storage.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class FileOffsetStorageConfigurer implements OffsetStorageConfigurer {
