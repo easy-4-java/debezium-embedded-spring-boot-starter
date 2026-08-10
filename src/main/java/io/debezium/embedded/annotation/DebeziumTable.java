@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * a specific destination/schema/table combination.
  * <p>Defaults ({@code *} / empty) act as wildcards that match any value.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Target({ElementType.TYPE})

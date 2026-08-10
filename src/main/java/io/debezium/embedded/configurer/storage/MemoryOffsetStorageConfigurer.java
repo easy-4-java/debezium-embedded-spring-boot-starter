@@ -6,7 +6,7 @@ import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 /**
  * {@link OffsetStorageConfigurer} for in-memory offset storage.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class MemoryOffsetStorageConfigurer implements OffsetStorageConfigurer {

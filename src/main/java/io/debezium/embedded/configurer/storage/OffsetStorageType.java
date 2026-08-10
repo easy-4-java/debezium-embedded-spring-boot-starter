@@ -3,7 +3,7 @@ package io.debezium.embedded.configurer.storage;
 /**
  * Enumeration of the offset-storage backends supported by this starter.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public enum OffsetStorageType {

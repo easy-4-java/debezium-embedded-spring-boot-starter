@@ -15,7 +15,7 @@ import java.util.List;
  * stopped together with the application context.
  * </p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public interface DebeziumClient extends SmartLifecycle {
