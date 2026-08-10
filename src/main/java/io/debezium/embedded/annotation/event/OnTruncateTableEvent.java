@@ -11,7 +11,7 @@ import java.lang.annotation.*;
  * <p>Methods annotated with this are invoked when a matching table is
  * truncated.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 

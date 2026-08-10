@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>Centralises creation of named thread factories and graceful shutdown of
  * threads and executors used by the starter.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Slf4j

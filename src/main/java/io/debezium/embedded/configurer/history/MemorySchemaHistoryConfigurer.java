@@ -6,7 +6,7 @@ import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 /**
  * {@link SchemaHistoryConfigurer} for in-memory schema history.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class MemorySchemaHistoryConfigurer implements SchemaHistoryConfigurer {

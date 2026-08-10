@@ -11,7 +11,7 @@ import java.util.Arrays;
  * Holds a single {@link OnDebeziumEvent} annotated method along with its
  * target bean, used by the annotation dispatch path to invoke listeners.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Getter

@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * Functional handler for a single JSON {@link ChangeEvent} emitted by the engine.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @FunctionalInterface

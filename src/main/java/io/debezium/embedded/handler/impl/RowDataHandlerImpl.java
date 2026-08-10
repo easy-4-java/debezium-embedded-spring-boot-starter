@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * {@link RowDataHandler} backed by the {@code DebeziumEntry.RowData} protocol
  * type, typically used for binary protocol events.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class RowDataHandlerImpl implements RowDataHandler<DebeziumEntry.RowData> {
