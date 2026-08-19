@@ -44,6 +44,10 @@ public enum TableNameEnum {
 
     /** @return the {@code schema.table} representation of this combination. */
     @Override
+    /**
+     * <p>To string.</p>
+     * @return the result
+     */
     public String toString() {
         StringJoiner joiner = new StringJoiner(".").add(schema).add(table);
         return joiner.toString();

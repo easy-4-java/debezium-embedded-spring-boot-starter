@@ -16,6 +16,11 @@ import lombok.Data;
  * @since 1.0.0
  */
 @Data
+/**
+ * <p>Auto-configuration for DebeziumSchemaHistoryProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumSchemaHistoryProperties {
 
 
@@ -48,6 +53,11 @@ public class DebeziumSchemaHistoryProperties {
 
     /** File based schema history configuration. */
     @Data
+    /**
+     * <p>Auto-configuration for File.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class File {
 
         /**
@@ -60,6 +70,11 @@ public class DebeziumSchemaHistoryProperties {
     
     /** Kafka based schema history configuration. */
     @Data
+    /**
+     * <p>Auto-configuration for Kafka.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Kafka {
 
         /**
@@ -119,6 +134,11 @@ public class DebeziumSchemaHistoryProperties {
         private Consumer consumer = new Consumer();
         
         @Data
+        /**
+         * <p>Auto-configuration for Producer.</p>
+         * @author <a href="https://github.com/loong10k">Loong Wan</a>
+         * @since 1.0.0
+         */
         public static class Producer {
             /**
              * 确认机制
@@ -182,6 +202,11 @@ public class DebeziumSchemaHistoryProperties {
         }
         
         @Data
+        /**
+         * <p>Auto-configuration for Consumer.</p>
+         * @author <a href="https://github.com/loong10k">Loong Wan</a>
+         * @since 1.0.0
+         */
         public static class Consumer {
             /**
              * 自动偏移量重置
@@ -250,6 +275,11 @@ public class DebeziumSchemaHistoryProperties {
         private Security security = new Security();
         
         @Data
+        /**
+         * <p>Auto-configuration for Security.</p>
+         * @author <a href="https://github.com/loong10k">Loong Wan</a>
+         * @since 1.0.0
+         */
         public static class Security {
             /**
              * 安全协议
@@ -304,6 +334,11 @@ public class DebeziumSchemaHistoryProperties {
     }
     
     @Data
+    /**
+     * <p>Auto-configuration for Jdbc.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Jdbc {
         /**
          * JDBC URL
@@ -466,6 +501,11 @@ public class DebeziumSchemaHistoryProperties {
     }
     
     @Data
+    /**
+     * <p>Auto-configuration for Redis.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Redis {
         /**
          * Redis 键名
@@ -640,6 +680,11 @@ public class DebeziumSchemaHistoryProperties {
     }
     
     @Data
+    /**
+     * <p>Auto-configuration for S3.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class S3 {
         /**
          * S3 存储桶名称
@@ -737,6 +782,11 @@ public class DebeziumSchemaHistoryProperties {
     }
     
     @Data
+    /**
+     * <p>Auto-configuration for RocketMq.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class RocketMq {
         /**
          * RocketMQ 主题名称
@@ -804,6 +854,11 @@ public class DebeziumSchemaHistoryProperties {
     }
     
     @Data
+    /**
+     * <p>Auto-configuration for AzureBlob.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class AzureBlob {
         /**
          * Azure 存储账户连接字符串
@@ -839,6 +894,11 @@ public class DebeziumSchemaHistoryProperties {
     }
     
     @Data
+    /**
+     * <p>Auto-configuration for Custom.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Custom {
         /**
          * 自定义历史记录类名

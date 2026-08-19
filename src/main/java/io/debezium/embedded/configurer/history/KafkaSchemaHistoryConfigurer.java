@@ -20,6 +20,11 @@ public class KafkaSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
      * @param properties the configuration properties
      */
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.Kafka kafka = properties.getKafka();
         

@@ -20,6 +20,11 @@ public class KafkaOffsetStorageConfigurer implements OffsetStorageConfigurer {
      * @param properties the offset-storage configuration properties
      */
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.Kafka kafka = properties.getKafka();
         PropertyMapper map = PropertyMappers.whenNonNull();

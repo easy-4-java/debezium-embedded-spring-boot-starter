@@ -33,6 +33,11 @@ import java.util.*;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for DefaultChangeEventHandler.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DefaultChangeEventHandler implements ChangeEventHandler, ApplicationContextAware {
 
     /** Annotation based event holders keyed by table name. */
@@ -57,6 +62,11 @@ public class DefaultChangeEventHandler implements ChangeEventHandler, Applicatio
 
 
     @Override
+    /**
+     * <p>Handle event.</p>
+     * @param event
+     * @param props
+     */
     public void handleEvent(ChangeEvent<String, String> event, Properties props) {
         if (Objects.nonNull(event.value())) {
             try {
@@ -169,6 +179,13 @@ public class DefaultChangeEventHandler implements ChangeEventHandler, Applicatio
         }*/
     }
 /*
+    /**
+     * <p>Handler row data.</p>
+     * @param model
+     * @param rowChange
+     * @param eventHolder
+     * @param eventType
+     */
     public void handlerRowData(DebeziumModel model, DebeziumEntry.RowChange rowChange, DebeziumEventHolder eventHolder, DebeziumEntry.EventType eventType) throws Exception {
         try {
             DebeziumContext.setModel(model);
@@ -182,6 +199,13 @@ public class DefaultChangeEventHandler implements ChangeEventHandler, Applicatio
         }
     }
 
+    /**
+     * <p>Handler row data.</p>
+     * @param model
+     * @param rowData
+     * @param entryHandler
+     * @param eventType
+     */
     public void handlerRowData(DebeziumModel model, DebeziumEntry.RowData rowData, RecordChangeEventEntryHandler entryHandler, DebeziumEntry.EventType eventType) throws Exception {
         try {
             // 设置上下文
@@ -195,6 +219,7 @@ public class DefaultChangeEventHandler implements ChangeEventHandler, Applicatio
     }*/
 
     @Override
+    /** @param applicationContext set the application context. */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         log.info("{}: annotation event handler is initializing....", Thread.currentThread().getName());
         // 获取所有的处理器

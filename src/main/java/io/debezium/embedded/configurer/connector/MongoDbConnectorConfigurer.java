@@ -14,6 +14,11 @@ import java.util.Objects;
  */
 public class MongoDbConnectorConfigurer implements ConnectorConfigurer {
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumConnectorProperties properties) {
         builder.with("connector.class", "io.debezium.connector.mongodb.MongoDbConnector");
         

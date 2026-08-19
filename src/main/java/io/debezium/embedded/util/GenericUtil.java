@@ -105,6 +105,7 @@ public class GenericUtil {
      * @return the resolved {@link Class}, or {@code null} when not parameterised
      */
     @SuppressWarnings("unchecked")
+    /** @return return the table class. */
     public static <T> Class<T> getTableClass(RecordChangeEventEntryHandler object) {
         // Resolve the handler's generic type argument
         Class<? extends RecordChangeEventEntryHandler> handlerClass = object.getClass();

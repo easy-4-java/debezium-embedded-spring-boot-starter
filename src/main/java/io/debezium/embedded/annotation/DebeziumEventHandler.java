@@ -17,6 +17,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
+/**
+ * <p>Auto-configuration for DebeziumEventHandler.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public @interface DebeziumEventHandler {
 
     /**

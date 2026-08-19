@@ -15,6 +15,11 @@ import lombok.Data;
  * @since 1.0.0
  */
 @Data
+/**
+ * <p>Auto-configuration for DebeziumConnectorProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumConnectorProperties {
 
     /**
@@ -94,6 +99,11 @@ public class DebeziumConnectorProperties {
 
     /** MySQL connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for MySql.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class MySql {
         // ==================== Snapshot configuration ====================
         /**
@@ -241,6 +251,11 @@ public class DebeziumConnectorProperties {
 
     /** PostgreSQL connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for PostgreSql.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class PostgreSql {
         /** Logical replication plugin name (default {@code pgoutput}). */
         private String pluginName = "pgoutput";
@@ -274,6 +289,11 @@ public class DebeziumConnectorProperties {
 
     /** MongoDB connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for MongoDb.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class MongoDb {
         /** MongoDB connection string (e.g. {@code mongodb://host:port}). */
         private String connectionString;
@@ -319,6 +339,11 @@ public class DebeziumConnectorProperties {
 
     /** Oracle connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for Oracle.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Oracle {
         /** Database name (SID or service name). */
         private String database;
@@ -332,6 +357,11 @@ public class DebeziumConnectorProperties {
 
     /** SQL Server connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for SqlServer.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class SqlServer {
         /** Database name. */
         private String database;
@@ -343,6 +373,11 @@ public class DebeziumConnectorProperties {
 
     /** Cassandra connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for Cassandra.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Cassandra {
         /** Cassandra connection string. */
         private String connectionString;
@@ -370,6 +405,11 @@ public class DebeziumConnectorProperties {
 
     /** Google Cloud Spanner connector specific tuning. */
     @Data
+    /**
+     * <p>Auto-configuration for Spanner.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Spanner {
         /** Spanner connection string. */
         private String connectionString;
@@ -399,6 +439,11 @@ public class DebeziumConnectorProperties {
 
     /** Custom connector configuration block. */
     @Data
+    /**
+     * <p>Auto-configuration for Custom.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Custom {
         /** Fully qualified class name of the custom {@code SourceConnector} implementation. */
         private String connectorClass;

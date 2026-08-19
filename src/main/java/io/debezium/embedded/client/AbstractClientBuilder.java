@@ -21,6 +21,11 @@ import java.util.List;
  * @since 1.0.0
  */
 @Accessors(chain = true)
+/**
+ * <p>Auto-configuration for AbstractClientBuilder.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public abstract class AbstractClientBuilder<D extends DebeziumClient> {
 
     /** Handler for JSON change events. */

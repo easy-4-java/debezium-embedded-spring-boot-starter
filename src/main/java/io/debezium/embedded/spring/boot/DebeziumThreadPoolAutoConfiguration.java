@@ -23,6 +23,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 @ConditionalOnClass(DebeziumEngine.class)
 @EnableConfigurationProperties(DebeziumThreadPoolProperties.class)
+/**
+ * <p>Auto-configuration for DebeziumThreadPoolAutoConfiguration.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumThreadPoolAutoConfiguration {
 
     /**
@@ -33,6 +38,11 @@ public class DebeziumThreadPoolAutoConfiguration {
      * @return a configured {@link ThreadPoolTaskExecutor}; shut down on context close
      */
     @Bean(destroyMethod = "shutdown", name = "debeziumEmbeddedExecutor")
+    /**
+     * <p>Debezium embedded executor.</p>
+     * @param poolProperties
+     * @return the result
+     */
     public ThreadPoolTaskExecutor debeziumEmbeddedExecutor(DebeziumThreadPoolProperties poolProperties) {
         BasicThreadFactory factory = BasicThreadFactory.builder()
                 .namingPattern("debezium-embedded-thread-%d")

@@ -15,6 +15,11 @@ import java.util.Arrays;
  * @since 1.0.0
  */
 @Getter
+/**
+ * <p>Auto-configuration for DebeziumEventHolder.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumEventHolder {
 
     /** The target bean instance. */

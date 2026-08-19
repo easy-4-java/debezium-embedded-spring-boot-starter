@@ -65,6 +65,11 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties({DebeziumEmbeddedProperties.class, DebeziumThreadPoolProperties.class})
 @Import(DebeziumThreadPoolAutoConfiguration.class)
 @Slf4j
+/**
+ * <p>Auto-configuration for DebeziumEmbeddedAutoConfiguration.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumEmbeddedAutoConfiguration {
 
     /**
@@ -73,6 +78,11 @@ public class DebeziumEmbeddedAutoConfiguration {
      * completion callback bean.
      */
     @Slf4j
+    /**
+     * <p>Auto-configuration for DefaultCompletionCallback.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class DefaultCompletionCallback implements DebeziumEngine.CompletionCallback {
         /**
          * Logs the supplied message and error when the engine did not finish successfully.
@@ -82,6 +92,12 @@ public class DebeziumEmbeddedAutoConfiguration {
          * @param error   the throwable that caused the failure, or {@code null} on success
          */
         @Override
+        /**
+         * <p>Handle.</p>
+         * @param success
+         * @param message
+         * @param error
+         */
         public void handle(final boolean success, final String message, final Throwable error) {
             if (!success) {
                 log.error(message, error);
@@ -108,6 +124,10 @@ public class DebeziumEmbeddedAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    /**
+     * <p>Record row data handler.</p>
+     * @return the result
+     */
     public RowDataHandler<List<Map<String, String>>> recordRowDataHandler() {
         return new MapRowDataHandlerImpl(new MapColumnModelFactory());
     }

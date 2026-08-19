@@ -11,6 +11,11 @@ import java.util.Properties;
  * @since 1.0.0
  */
 @FunctionalInterface
+/**
+ * <p>Auto-configuration for ChangeEventHandler.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public interface ChangeEventHandler {
 
     /**

@@ -32,6 +32,11 @@ import java.util.function.Function;
  */
 @ConfigurationProperties(DebeziumThreadPoolProperties.PREFIX)
 @Data
+/**
+ * <p>Auto-configuration for DebeziumThreadPoolProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumThreadPoolProperties {
 
 	/** Configuration prefix used by Spring Boot to bind properties. */

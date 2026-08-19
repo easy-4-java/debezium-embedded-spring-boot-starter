@@ -20,6 +20,11 @@ public class DebeziumEntry {
      * Parsed representation of a single row change, including before/after state.
      */
     @Data
+    /**
+     * <p>Auto-configuration for RowChange.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class RowChange {
 
         /** Debezium envelope operation. */
@@ -48,6 +53,11 @@ public class DebeziumEntry {
      * Raw row change data carrying the key and before/after column lists.
      */
     @Data
+    /**
+     * <p>Auto-configuration for RowData.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class RowData {
         /** Primary key of the changed row. */
         public String key;
@@ -62,6 +72,11 @@ public class DebeziumEntry {
      * Single column value within a {@link RowData}.
      */
     @Data
+    /**
+     * <p>Auto-configuration for Column.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Column {
         /** Column name. */
         public String name;

@@ -26,6 +26,11 @@ public class MySqlConnectorConfigurer implements ConnectorConfigurer {
      * @param properties the connector configuration properties
      */
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumConnectorProperties properties) {
         PropertyMapper map = PropertyMappers.whenNonNull();
         // ==================== Required configuration ====================

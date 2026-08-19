@@ -38,6 +38,11 @@ import java.util.*;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for DefaultRecordChangeEventHandler.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DefaultRecordChangeEventHandler implements RecordChangeEventHandler, ApplicationContextAware {
 
     /** Annotation based event holders keyed by table name. */
@@ -130,6 +135,13 @@ public class DefaultRecordChangeEventHandler implements RecordChangeEventHandler
     }
 
 
+    /**
+     * <p>Handler row data.</p>
+     * @param model
+     * @param rowData
+     * @param eventHolder
+     * @param eventType
+     */
     public void handlerRowData(DebeziumModel model, List<Map<String, String>> rowData, DebeziumEventHolder eventHolder, DebeziumEntry.EventType eventType) throws Exception {
         Method method = eventHolder.getMethod();
         try {
@@ -143,6 +155,13 @@ public class DefaultRecordChangeEventHandler implements RecordChangeEventHandler
         }
     }
 
+    /**
+     * <p>Handler row data.</p>
+     * @param model
+     * @param rowData
+     * @param entryHandler
+     * @param eventType
+     */
     public void handlerRowData(DebeziumModel model, List<Map<String, String>> rowData, RecordChangeEventEntryHandler entryHandler, DebeziumEntry.EventType eventType) throws Exception {
         try {
             // 设置上下文
@@ -156,6 +175,7 @@ public class DefaultRecordChangeEventHandler implements RecordChangeEventHandler
     }
 
     @Override
+    /** @param applicationContext set the application context. */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         log.info("{}: annotation event handler is initializing....", Thread.currentThread().getName());
         // 获取所有的处理器

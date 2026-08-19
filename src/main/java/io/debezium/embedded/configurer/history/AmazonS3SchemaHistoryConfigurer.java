@@ -20,6 +20,11 @@ public class AmazonS3SchemaHistoryConfigurer implements SchemaHistoryConfigurer 
      * @param properties the configuration properties
      */
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.S3 s3 = properties.getS3();
         

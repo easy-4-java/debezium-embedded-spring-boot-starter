@@ -20,6 +20,12 @@ public abstract class AbstractModelFactory<T> implements IModelFactory<T> {
 
     /** {@inheritDoc} */
     @Override
+    /**
+     * <p>New instance.</p>
+     * @param entryHandler
+     * @param t
+     * @return the result
+     */
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, T t) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
         if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {

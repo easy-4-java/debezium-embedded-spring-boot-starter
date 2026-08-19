@@ -21,6 +21,11 @@ import java.util.List;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for DebeziumEmbeddedClient.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumEmbeddedClient extends AbstractDebeziumClient<RecordChangeEvent<SourceRecord>> {
 
     /**
@@ -47,6 +52,10 @@ public class DebeziumEmbeddedClient extends AbstractDebeziumClient<RecordChangeE
          * @return a new client instance
          */
         @Override
+        /**
+         * <p>Build.</p>
+         * @return the result
+         */
         public DebeziumEmbeddedClient build() {
             return new DebeziumEmbeddedClient(changeEventEngines, recordChangeEventEngines, debeziumTaskExecutor);
         }

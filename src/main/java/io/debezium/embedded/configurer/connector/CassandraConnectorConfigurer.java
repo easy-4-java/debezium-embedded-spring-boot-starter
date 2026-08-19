@@ -21,6 +21,11 @@ public class CassandraConnectorConfigurer implements ConnectorConfigurer {
      * @param properties the connector configuration properties
      */
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumConnectorProperties properties) {
         builder.with("connector.class", "io.debezium.connector.cassandra.CassandraConnector");
         

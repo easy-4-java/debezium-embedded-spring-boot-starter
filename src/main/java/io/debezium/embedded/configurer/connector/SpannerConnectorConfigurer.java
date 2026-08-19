@@ -13,6 +13,11 @@ import io.debezium.embedded.util.PropertyMappers;
  */
 public class SpannerConnectorConfigurer implements ConnectorConfigurer {
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumConnectorProperties properties) {
         builder.with("connector.class", "io.debezium.connector.spanner.SpannerConnector");
         

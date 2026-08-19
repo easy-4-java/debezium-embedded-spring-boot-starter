@@ -30,6 +30,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for ThreadUtils.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public final class ThreadUtils {
 
     public static ExecutorService newThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime,
@@ -37,10 +42,22 @@ public final class ThreadUtils {
         return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, newThreadFactory(processName, isDaemon));
     }
 
+    /**
+     * <p>New single thread executor.</p>
+     * @param processName
+     * @param isDaemon
+     * @return the result
+     */
     public static ExecutorService newSingleThreadExecutor(String processName, boolean isDaemon) {
         return Executors.newSingleThreadExecutor(newThreadFactory(processName, isDaemon));
     }
 
+    /**
+     * <p>New single thread scheduled executor.</p>
+     * @param processName
+     * @param isDaemon
+     * @return the result
+     */
     public static ScheduledExecutorService newSingleThreadScheduledExecutor(String processName, boolean isDaemon) {
         return Executors.newSingleThreadScheduledExecutor(newThreadFactory(processName, isDaemon));
     }
@@ -50,23 +67,51 @@ public final class ThreadUtils {
         return Executors.newScheduledThreadPool(nThreads, newThreadFactory(processName, isDaemon));
     }
 
+    /**
+     * <p>New thread factory.</p>
+     * @param processName
+     * @param isDaemon
+     * @return the result
+     */
     public static ThreadFactory newThreadFactory(String processName, boolean isDaemon) {
         return newGenericThreadFactory("Remoting-" + processName, isDaemon);
     }
 
+    /**
+     * <p>New generic thread factory.</p>
+     * @param processName
+     * @return the result
+     */
     public static ThreadFactory newGenericThreadFactory(String processName) {
         return newGenericThreadFactory(processName, false);
     }
 
+    /**
+     * <p>New generic thread factory.</p>
+     * @param processName
+     * @param threads
+     * @return the result
+     */
     public static ThreadFactory newGenericThreadFactory(String processName, int threads) {
         return newGenericThreadFactory(processName, threads, false);
     }
 
+    /**
+     * <p>New generic thread factory.</p>
+     * @param processName
+     * @param isDaemon
+     * @return the result
+     */
     public static ThreadFactory newGenericThreadFactory(final String processName, final boolean isDaemon) {
         return new ThreadFactory() {
             private AtomicInteger threadIndex = new AtomicInteger(0);
 
             @Override
+            /**
+             * <p>New thread.</p>
+             * @param r
+             * @return the result
+             */
             public Thread newThread(Runnable r) {
                 Thread thread = new Thread(r, String.format("%s_%d", processName, this.threadIndex.incrementAndGet()));
                 thread.setDaemon(isDaemon);
@@ -81,6 +126,11 @@ public final class ThreadUtils {
             private AtomicInteger threadIndex = new AtomicInteger(0);
 
             @Override
+            /**
+             * <p>New thread.</p>
+             * @param r
+             * @return the result
+             */
             public Thread newThread(Runnable r) {
                 Thread thread = new Thread(r, String.format("%s_%d_%d", processName, threads, this.threadIndex.incrementAndGet()));
                 thread.setDaemon(isDaemon);
@@ -102,6 +152,11 @@ public final class ThreadUtils {
         thread.setDaemon(daemon);
         thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
+            /**
+             * <p>Uncaught exception.</p>
+             * @param t
+             * @param e
+             */
             public void uncaughtException(Thread t, Throwable e) {
                 log.error("Uncaught exception in thread '" + t.getName() + "':", e);
             }

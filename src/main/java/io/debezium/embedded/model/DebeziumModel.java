@@ -15,6 +15,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
+/**
+ * <p>Auto-configuration for DebeziumModel.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumModel {
 
     /**
@@ -53,6 +58,10 @@ public class DebeziumModel {
     private Long createTime;
 
     @Override
+    /**
+     * <p>To string.</p>
+     * @return the result
+     */
     public String toString() {
         final StringBuilder sb = new StringBuilder("DebeziumModel{");
         sb.append("id=").append(id);

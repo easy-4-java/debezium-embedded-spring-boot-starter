@@ -43,6 +43,13 @@ public class RowDataHandlerImpl implements RowDataHandler<DebeziumEntry.RowData>
      * @throws Exception if materialisation or dispatch fails
      */
     @Override
+    /**
+     * <p>Handler row data.</p>
+     * @param rowData
+     * @param entryHandler
+     * @param eventType
+     * @return the result
+     */
     public <R> void handlerRowData(DebeziumEntry.RowData rowData, RecordChangeEventEntryHandler<R> entryHandler, DebeziumEntry.EventType eventType) throws Exception {
         if (Objects.isNull(rowData) || Objects.isNull(entryHandler) || Objects.isNull(eventType)) {
             return;

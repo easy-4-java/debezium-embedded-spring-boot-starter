@@ -9,6 +9,11 @@ import lombok.Data;
  * @since 1.0.0
  */
 @Data
+/**
+ * <p>Auto-configuration for DebeziumAsyncEngineProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumAsyncEngineProperties {
 
     /**

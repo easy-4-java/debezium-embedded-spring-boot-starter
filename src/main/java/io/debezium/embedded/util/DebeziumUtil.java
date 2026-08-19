@@ -29,6 +29,11 @@ import static java.util.stream.Collectors.toMap;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for DebeziumUtil.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumUtil {
 
     /** Result key for the current row data. */

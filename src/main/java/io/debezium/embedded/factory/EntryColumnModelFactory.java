@@ -31,6 +31,12 @@ public class EntryColumnModelFactory extends AbstractModelFactory<List<DebeziumE
 
     /** {@inheritDoc} */
     @Override
+    /**
+     * <p>New instance.</p>
+     * @param entryHandler
+     * @param columns
+     * @return the result
+     */
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, List<DebeziumEntry.Column> columns) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
         if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {
@@ -45,6 +51,13 @@ public class EntryColumnModelFactory extends AbstractModelFactory<List<DebeziumE
     }
 
     @Override
+    /**
+     * <p>New instance.</p>
+     * @param entryHandler
+     * @param columns
+     * @param updateColumn
+     * @return the result
+     */
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, List<DebeziumEntry.Column> columns, Set<String> updateColumn) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
         if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {

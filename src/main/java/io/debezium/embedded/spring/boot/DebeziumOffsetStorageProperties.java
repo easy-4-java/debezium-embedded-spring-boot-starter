@@ -26,6 +26,11 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Data
+/**
+ * <p>Auto-configuration for DebeziumOffsetStorageProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumOffsetStorageProperties {
 
     /**
@@ -55,6 +60,11 @@ public class DebeziumOffsetStorageProperties {
      * <p>The simplest option; suited to single-node deployments that do not require high availability.</p>
      */
     @Data
+    /**
+     * <p>Auto-configuration for File.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class File {
         /**
          * Path of the file that stores the connector offsets.
@@ -85,6 +95,11 @@ public class DebeziumOffsetStorageProperties {
      * connector instances can share offsets through the topic.</p>
      */
     @Data
+    /**
+     * <p>Auto-configuration for Kafka.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Kafka {
 
         /**
@@ -118,6 +133,11 @@ public class DebeziumOffsetStorageProperties {
 
         /** Kafka producer configuration. */
         @Data
+        /**
+         * <p>Auto-configuration for Producer.</p>
+         * @author <a href="https://github.com/loong10k">Loong Wan</a>
+         * @since 1.0.0
+         */
         public static class Producer {
             /**
              * Acknowledgement level for produced records.
@@ -169,6 +189,11 @@ public class DebeziumOffsetStorageProperties {
 
         /** Kafka consumer configuration. */
         @Data
+        /**
+         * <p>Auto-configuration for Consumer.</p>
+         * @author <a href="https://github.com/loong10k">Loong Wan</a>
+         * @since 1.0.0
+         */
         public static class Consumer {
             /**
              * Auto offset reset policy when no committed offset exists.
@@ -217,6 +242,11 @@ public class DebeziumOffsetStorageProperties {
 
         /** Kafka security configuration (SSL / SASL). */
         @Data
+        /**
+         * <p>Auto-configuration for Security.</p>
+         * @author <a href="https://github.com/loong10k">Loong Wan</a>
+         * @since 1.0.0
+         */
         public static class Security {
             /**
              * Wire protocol used to talk to Kafka.
@@ -265,6 +295,11 @@ public class DebeziumOffsetStorageProperties {
      * with a relational database backend.</p>
      */
     @Data
+    /**
+     * <p>Auto-configuration for Jdbc.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Jdbc {
 
         /**
@@ -310,6 +345,11 @@ public class DebeziumOffsetStorageProperties {
      * and cluster topologies.</p>
      */
     @Data
+    /**
+     * <p>Auto-configuration for Redis.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Redis {
 
         // ==================== Offset Store configuration ====================
@@ -389,6 +429,11 @@ public class DebeziumOffsetStorageProperties {
      * implementing {@code org.apache.kafka.connect.storage.OffsetBackingStore}.</p>
      */
     @Data
+    /**
+     * <p>Auto-configuration for Custom.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Custom {
         /**
          * Fully qualified class name implementing {@code OffsetBackingStore}.

@@ -11,6 +11,11 @@ import lombok.extern.slf4j.Slf4j;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for DebeziumThreadUncaughtExceptionHandler.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumThreadUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     /**
@@ -20,6 +25,11 @@ public class DebeziumThreadUncaughtExceptionHandler implements Thread.UncaughtEx
      * @param e the uncaught throwable
      */
     @Override
+    /**
+     * <p>Uncaught exception.</p>
+     * @param t
+     * @param e
+     */
     public void uncaughtException(Thread t, Throwable e) {
         log.error("thread "+ t.getName()+" have a exception",e);
     }

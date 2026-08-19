@@ -46,6 +46,11 @@ import java.util.List;
  */
 @ConfigurationProperties(DebeziumEmbeddedProperties.PREFIX)
 @Data
+/**
+ * <p>Auto-configuration for DebeziumEmbeddedProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class DebeziumEmbeddedProperties {
 
     /**
@@ -63,6 +68,11 @@ public class DebeziumEmbeddedProperties {
      * Definition of a single Debezium engine instance.
      */
     @Data
+    /**
+     * <p>Auto-configuration for Instance.</p>
+     * @author <a href="https://github.com/loong10k">Loong Wan</a>
+     * @since 1.0.0
+     */
     public static class Instance {
 
         /**

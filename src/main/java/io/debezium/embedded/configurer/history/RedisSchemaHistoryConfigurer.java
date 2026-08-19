@@ -21,6 +21,11 @@ public class RedisSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
      * @param properties the configuration properties
      */
     @Override
+    /**
+     * <p>Apply.</p>
+     * @param builder
+     * @param properties
+     */
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.Redis redis = properties.getRedis();
         PropertyMapper map = PropertyMappers.whenNonNull();

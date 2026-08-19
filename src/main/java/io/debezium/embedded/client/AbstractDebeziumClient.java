@@ -29,6 +29,11 @@ import java.util.concurrent.*;
  * @since 1.0.0
  */
 @Slf4j
+/**
+ * <p>Auto-configuration for AbstractDebeziumClient.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public abstract class AbstractDebeziumClient<R> implements InitializingBean, DebeziumClient {
 
     /** Whether the client is currently running. */
@@ -64,6 +69,9 @@ public abstract class AbstractDebeziumClient<R> implements InitializingBean, Deb
 
     /** {@inheritDoc} */
     @Override
+    /**
+     * <p>After properties set.</p>
+     */
     public void afterPropertiesSet() {
 
     }
@@ -72,6 +80,9 @@ public abstract class AbstractDebeziumClient<R> implements InitializingBean, Deb
      * Starts every change-event engine on the executor and marks the client as running.
      */
     @Override
+    /**
+     * <p>Start.</p>
+     */
     public void start() {
         log.info("Start Debezium Client Of Instance： {}", this.getClass().getSimpleName());
         for (DebeziumEngine<ChangeEvent<String, String>> debeziumEngine : changeEventEngines) {
@@ -85,6 +96,9 @@ public abstract class AbstractDebeziumClient<R> implements InitializingBean, Deb
      */
     @SneakyThrows
     @Override
+    /**
+     * <p>Stop.</p>
+     */
     public void stop() {
         log.info("Stop Debezium Client Of Instance： {}", this.getClass().getSimpleName());
         this.running = false;
@@ -113,6 +127,7 @@ public abstract class AbstractDebeziumClient<R> implements InitializingBean, Deb
 
     /** @return {@code true} when the client is running. */
     @Override
+    /** @return return whether running is enabled. */
     public boolean isRunning() {
         return this.running;
     }
@@ -142,6 +157,10 @@ public abstract class AbstractDebeziumClient<R> implements InitializingBean, Deb
 
     /** {@inheritDoc} */
     @Override
+    /**
+     * <p>Process.</p>
+     * @param changeEvent
+     */
     public void process(ChangeEvent<String, String> changeEvent) {
 
     }
