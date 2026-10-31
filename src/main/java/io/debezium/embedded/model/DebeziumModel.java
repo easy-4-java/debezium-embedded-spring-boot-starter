@@ -30,6 +30,21 @@ public class DebeziumModel {
         private Integer eventType;
         /** Time the change occurred (epoch millis). */
         private Long changeTime;
+        private String data;
+        private String beforeData;
+
+        public String getDb() { return db; }
+        public String getTable() { return table; }
+        public Integer getEventType() { return eventType; }
+        public Long getChangeTime() { return changeTime; }
+        public String getData() { return data; }
+        public String getBeforeData() { return beforeData; }
+        public void setDb(String db) { this.db = db; }
+        public void setTable(String table) { this.table = table; }
+        public void setEventType(Integer eventType) { this.eventType = eventType; }
+        public void setChangeTime(Long changeTime) { this.changeTime = changeTime; }
+        public void setData(String data) { this.data = data; }
+        public void setBeforeData(String beforeData) { this.beforeData = beforeData; }
     }
 
     /** Monotonic message id. */
