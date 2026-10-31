@@ -26,7 +26,7 @@ public class KafkaSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMapper.get();
         
         // 基础配置
         map.from(kafka::getTopic).whenHasText().to(value -> builder.with("schema.history.internal.kafka.topic", value));
