@@ -28,7 +28,7 @@ public class FileSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMapper.get();
         map.from(file::getFilename).whenHasText().to(value -> builder.with("schema.history.internal.file", value));
 
     }
