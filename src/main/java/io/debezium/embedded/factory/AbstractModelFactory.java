@@ -22,7 +22,7 @@ public abstract class AbstractModelFactory<T> implements IModelFactory<T> {
     @Override
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, T t) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
-        if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {
+        if (HandlerUtil.getCombinationValue("", "", "").equals(debeziumTableName)) {
             return (R) t;
         }
         Class<R> tableClass = GenericUtil.getTableClass(entryHandler);
