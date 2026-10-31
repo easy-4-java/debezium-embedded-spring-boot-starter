@@ -21,7 +21,7 @@ public class KafkaOffsetStorageConfigurer implements OffsetStorageConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.Kafka kafka = properties.getKafka();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMapper.get();
         // Offset Store
         builder.with("offset.storage", "org.apache.kafka.connect.storage.KafkaOffsetBackingStore");
         map.from(kafka::getTopic).whenHasText().to(value -> builder.with("offset.storage.topic", value));

@@ -22,7 +22,7 @@ public class RocketMqSchemaHistoryConfigurer implements SchemaHistoryConfigurer 
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.RocketMq rocketMq = properties.getRocketMq();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMapper.get();
         
         builder.with("schema.history.internal", "io.debezium.storage.rocketmq.history.RocketMqSchemaHistory");
         

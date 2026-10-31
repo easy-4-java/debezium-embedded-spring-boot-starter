@@ -23,7 +23,7 @@ public class JdbcOffsetStorageConfigurer implements OffsetStorageConfigurer {
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
 
         DebeziumOffsetStorageProperties.Jdbc jdbc = properties.getJdbc();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMapper.get();
 
         // Offset Store
         builder.with("offset.storage", "io.debezium.storage.jdbc.offset.JdbcOffsetBackingStore");
