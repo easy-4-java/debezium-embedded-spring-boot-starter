@@ -4,11 +4,14 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumSchemaHistoryProperties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 /**
  * Tests for {@link SchemaHistoryConfigurerFactory} and every
@@ -18,6 +21,30 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("SchemaHistory configurers")
 class SchemaHistoryConfigurerFactoryTest {
+
+    @Test
+    void rocketMq_omitsUnsetRecoverySettings() {
+        DebeziumSchemaHistoryProperties properties = new DebeziumSchemaHistoryProperties();
+        properties.getRocketMq().setRecoveryAttempts(10);
+        properties.getRocketMq().setRecoveryPollIntervalMs(100);
+        properties.getRocketMq().setStoreRecordTimeoutMs(1000);
+        properties.getRocketMq().setRecoveryAttempts(null);
+        properties.getRocketMq().setRecoveryPollIntervalMs(null);
+        properties.getRocketMq().setStoreRecordTimeoutMs(null);
+        Configuration config = apply(new RocketMqSchemaHistoryConfigurer(), properties);
+        assertThat(config.hasKey("schema.history.internal.rocketmq.recovery.attempts")).isFalse();
+        assertThat(config.hasKey("schema.history.internal.rocketmq.recovery.poll.interval.ms")).isFalse();
+        assertThat(config.hasKey("schema.history.internal.rocketmq.store.record.timeout.ms")).isFalse();
+    }
+
+    @ParameterizedTest
+    @EnumSource(SchemaHistoryType.class)
+    void defaultPropertiesDoNotSendNullToDebezium(SchemaHistoryType type) {
+        DebeziumSchemaHistoryProperties properties = new DebeziumSchemaHistoryProperties();
+        properties.setType(type);
+        assertThatCode(() -> apply(SchemaHistoryConfigurerFactory.from(properties), properties))
+                .as("default history %s", type).doesNotThrowAnyException();
+    }
 
     @Test
     @DisplayName("factory resolves every supported type")

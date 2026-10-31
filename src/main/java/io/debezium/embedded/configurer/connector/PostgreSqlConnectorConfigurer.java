@@ -19,11 +19,11 @@ public class PostgreSqlConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         // Base connection configuration
         map.from(properties::getHost).whenHasText().to(value -> builder.with("database.hostname", value));
-        map.from(properties::getPort).to(value -> builder.with("database.port", value));
+        map.from(properties::getPort).whenNonNull().to(value -> builder.with("database.port", value));
         map.from(properties::getUsername).whenHasText().to(value -> builder.with("database.user", value));
         map.from(properties::getPassword).whenHasText().to(value -> builder.with("database.password", value));
         map.from(properties::getDatabaseName).whenHasText().to(value -> builder.with("database.dbname", value));

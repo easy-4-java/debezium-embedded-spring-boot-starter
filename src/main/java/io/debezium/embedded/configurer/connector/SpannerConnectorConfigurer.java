@@ -18,7 +18,7 @@ public class SpannerConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         // Base connection configuration
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));

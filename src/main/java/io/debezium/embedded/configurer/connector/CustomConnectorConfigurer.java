@@ -19,13 +19,13 @@ public class CustomConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         if (properties.getCustom() != null) {
             map.from(properties.getCustom()::getConnectorClass).whenHasText().to(value -> builder.with("connector.class", value));
             
             // Forward custom raw properties
-            map.from(properties.getCustom()::getProps).to(props -> {
+            map.from(properties.getCustom()::getProps).whenNonNull().to(props -> {
                 if (props != null) {
                     props.forEach(builder::with);
                 }
