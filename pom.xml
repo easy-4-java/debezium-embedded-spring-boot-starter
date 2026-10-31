@@ -472,6 +472,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>21</java.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
+        <maven-jacoco-plugin.version>0.8.15</maven-jacoco-plugin.version>
         <maven-nexus-staging-plugin.version>1.7.0</maven-nexus-staging-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         
@@ -803,6 +804,11 @@
             <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- For Commons IO -->

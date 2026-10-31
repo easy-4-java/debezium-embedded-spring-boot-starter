@@ -22,7 +22,7 @@ public class MongoDbConnectorConfigurer implements ConnectorConfigurer {
             /*
              * 批量设置参数
              */
-            PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+            PropertyMapper map = PropertyMapper.get();
             
             // Base connection configuration
             map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
@@ -34,7 +34,7 @@ public class MongoDbConnectorConfigurer implements ConnectorConfigurer {
             // Fall back to traditional host/port connection when no connection string is set
             if (mongoDb.getConnectionString() == null || mongoDb.getConnectionString().trim().isEmpty()) {
                 map.from(properties::getHost).whenHasText().to(host -> 
-                    map.from(properties::getPort).whenNonNull().to(port -> 
+                    map.from(properties::getPort).to(port ->
                         builder.with("mongodb.hosts", host + ":" + port)
                     )
                 );
