@@ -21,7 +21,7 @@ public class FileOffsetStorageConfigurer implements OffsetStorageConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.File file = properties.getFile();
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         // Offset Store
         builder.with("offset.storage", "org.apache.kafka.connect.storage.FileOffsetBackingStore");
         map.from(file::getFileName).whenHasText().to(value -> builder.with("offset.storage.file.filename", value));

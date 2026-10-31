@@ -22,7 +22,7 @@ public class RedisSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.Redis redis = properties.getRedis();
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         builder.with("schema.history.internal", "io.debezium.storage.redis.history.RedisSchemaHistory");
         

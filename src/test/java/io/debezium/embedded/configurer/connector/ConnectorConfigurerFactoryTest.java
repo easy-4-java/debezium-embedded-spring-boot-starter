@@ -4,11 +4,14 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumConnectorProperties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 /**
  * Tests for {@link ConnectorConfigurerFactory} and every
@@ -18,6 +21,24 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("Connector configurers")
 class ConnectorConfigurerFactoryTest {
+
+    @Test
+    void mysql_omitsUnsetPort() {
+        DebeziumConnectorProperties properties = new DebeziumConnectorProperties();
+        properties.setPort(3306);
+        properties.setPort(null);
+        Configuration config = apply(new MySqlConnectorConfigurer(), properties);
+        assertThat(config.hasKey("database.port")).isFalse();
+    }
+
+    @ParameterizedTest
+    @EnumSource(ConnectorType.class)
+    void defaultPropertiesDoNotSendNullToDebezium(ConnectorType type) {
+        DebeziumConnectorProperties properties = new DebeziumConnectorProperties();
+        properties.setType(type);
+        assertThatCode(() -> apply(ConnectorConfigurerFactory.from(properties), properties))
+                .as("default connector %s", type).doesNotThrowAnyException();
+    }
 
     @Test
     @DisplayName("factory resolves every supported type")

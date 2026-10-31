@@ -27,7 +27,7 @@ public class AmazonS3SchemaHistoryConfigurer implements SchemaHistoryConfigurer 
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         // 严格按照官方文档配置参数
         // 必需的 S3 配置

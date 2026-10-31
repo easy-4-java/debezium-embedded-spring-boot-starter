@@ -18,14 +18,14 @@ public class VitessConnectorConfigurer implements ConnectorConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         // Base connection configuration
         map.from(properties::getServerName).whenHasText().to(value -> builder.with("database.server.name", value));
         
         // Vitess specific configuration
         map.from(properties::getHost).whenHasText().to(host -> 
-            map.from(properties::getPort).to(port ->
+            map.from(properties::getPort).whenNonNull().to(port -> 
                 builder.with("vitess.hosts", host + ":" + port)
             )
         );

@@ -22,7 +22,7 @@ public class RedisOffsetStorageConfigurer implements OffsetStorageConfigurer {
     @Override
     public void apply(Configuration.Builder builder, DebeziumOffsetStorageProperties properties) {
         DebeziumOffsetStorageProperties.Redis redis = properties.getRedis();
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
         // Offset Store - 严格按照官方文档配置
         builder.with("offset.storage", "io.debezium.storage.redis.offset.RedisOffsetBackingStore");

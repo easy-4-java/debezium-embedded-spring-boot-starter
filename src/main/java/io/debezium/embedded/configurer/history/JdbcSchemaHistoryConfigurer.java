@@ -27,7 +27,7 @@ public class JdbcSchemaHistoryConfigurer implements SchemaHistoryConfigurer {
         /*
          * 批量设置参数
          */
-        PropertyMapper map = PropertyMapper.get();
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
         
         // Base connection configuration
         map.from(jdbc::getUrl).whenHasText().to(value -> builder.with("schema.history.internal.jdbc.connection.url", value));

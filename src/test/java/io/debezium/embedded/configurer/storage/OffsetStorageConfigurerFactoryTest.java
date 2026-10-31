@@ -4,11 +4,14 @@ import io.debezium.config.Configuration;
 import io.debezium.embedded.spring.boot.DebeziumOffsetStorageProperties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 /**
  * Tests for {@link OffsetStorageConfigurerFactory} and every
@@ -18,6 +21,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("OffsetStorage configurers")
 class OffsetStorageConfigurerFactoryTest {
+
+    @ParameterizedTest
+    @EnumSource(OffsetStorageType.class)
+    void defaultPropertiesDoNotSendNullToDebezium(OffsetStorageType type) {
+        DebeziumOffsetStorageProperties properties = new DebeziumOffsetStorageProperties();
+        properties.setType(type);
+        assertThatCode(() -> apply(OffsetStorageConfigurerFactory.from(properties), properties))
+                .as("default offset storage %s", type).doesNotThrowAnyException();
+    }
 
     @Test
     @DisplayName("factory resolves every supported type")
