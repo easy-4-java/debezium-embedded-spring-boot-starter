@@ -22,7 +22,7 @@ public class AzureBlobSchemaHistoryConfigurer implements SchemaHistoryConfigurer
     @Override
     public void apply(Configuration.Builder builder, DebeziumSchemaHistoryProperties properties) {
         DebeziumSchemaHistoryProperties.AzureBlob azureBlob = properties.getAzureBlob();
-        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        PropertyMapper map = PropertyMapper.get();
         
         builder.with("schema.history.internal", "io.debezium.storage.azure.blob.history.AzureBlobSchemaHistory");
         

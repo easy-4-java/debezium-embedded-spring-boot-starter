@@ -33,7 +33,7 @@ public class EntryColumnModelFactory extends AbstractModelFactory<List<DebeziumE
     @Override
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, List<DebeziumEntry.Column> columns) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
-        if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {
+        if (HandlerUtil.getCombinationValue("", "", "").equals(debeziumTableName)) {
             Map<String, String> map = columns.stream().collect(Collectors.toMap(DebeziumEntry.Column::getName, DebeziumEntry.Column::getValue));
             return (R) map;
         }
@@ -47,7 +47,7 @@ public class EntryColumnModelFactory extends AbstractModelFactory<List<DebeziumE
     @Override
     public <R> R newInstance(RecordChangeEventEntryHandler entryHandler, List<DebeziumEntry.Column> columns, Set<String> updateColumn) throws Exception {
         String debeziumTableName = HandlerUtil.getDebeziumTableNameCombination(entryHandler);
-        if (TableNameEnum.ALL.name().toLowerCase().equals(debeziumTableName)) {
+        if (HandlerUtil.getCombinationValue("", "", "").equals(debeziumTableName)) {
             Map<String, String> map = columns.stream().filter(column -> updateColumn.contains(column.getName()))
                     .collect(Collectors.toMap(DebeziumEntry.Column::getName, DebeziumEntry.Column::getValue));
             return (R) map;
