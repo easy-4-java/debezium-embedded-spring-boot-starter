@@ -178,46 +178,6 @@ public class DefaultChangeEventHandler implements ChangeEventHandler, Applicatio
             }
         }*/
     }
-/*
-    /**
-     * <p>Handler row data.</p>
-     * @param model
-     * @param rowChange
-     * @param eventHolder
-     * @param eventType
-     */
-    public void handlerRowData(DebeziumModel model, DebeziumEntry.RowChange rowChange, DebeziumEventHolder eventHolder, DebeziumEntry.EventType eventType) throws Exception {
-        try {
-            DebeziumContext.setModel(model);
-            Method method = eventHolder.getMethod();
-            ReflectionUtils.makeAccessible(method);
-            Object[] args = GenericUtil.getInvokeArgs(method, model, rowChange, eventType);
-            method.invoke(eventHolder.getTarget(), args);
-        } finally {
-            // 移除上下文
-            DebeziumContext.removeModel();
-        }
-    }
-
-    /**
-     * <p>Handler row data.</p>
-     * @param model
-     * @param rowData
-     * @param entryHandler
-     * @param eventType
-     */
-    public void handlerRowData(DebeziumModel model, DebeziumEntry.RowData rowData, RecordChangeEventEntryHandler entryHandler, DebeziumEntry.EventType eventType) throws Exception {
-        try {
-            // 设置上下文
-            DebeziumContext.setModel(model);
-            // 逐行调用Handler处理
-            rowDataHandler.handlerRowData(rowData, entryHandler, eventType);
-        } finally {
-            // 移除上下文
-            DebeziumContext.removeModel();
-        }
-    }*/
-
     @Override
     /** @param applicationContext set the application context. */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

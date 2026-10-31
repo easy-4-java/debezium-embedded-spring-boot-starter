@@ -76,7 +76,13 @@ public class DebeziumUtil {
      * @return a map of selected source fields, with {@code timestamp} renamed to {@code changeTime}
      */
     public static Map<String, Object> getChangeTableInfo(Struct sourceRecordChangeValue) {
+        if (sourceRecordChangeValue.schema().field(Envelope.FieldName.SOURCE) == null) {
+            return Map.of();
+        }
         Struct struct = (Struct) sourceRecordChangeValue.get(Envelope.FieldName.SOURCE);
+        if (struct == null) {
+            return Map.of();
+        }
         Map<String, Object> map = struct.schema().fields().stream()
                 .map(Field::name)
                 .filter(fieldName -> struct.get(fieldName) != null && TableFieldName.filterJsonField(fieldName))
@@ -101,7 +107,7 @@ public class DebeziumUtil {
     public static DebeziumModel.ChangeListenerModel getChangeDataInfo(Struct sourceRecordChangeValue, Map<String, Object> changeMap) {
         // Filter by operation: handle insert/update/delete only
         Envelope.Operation operation = Envelope.Operation.forCode((String) sourceRecordChangeValue.get(Envelope.FieldName.OPERATION));
-        if (operation != Envelope.Operation.READ) {
+        if (operation == Envelope.Operation.CREATE || operation == Envelope.Operation.UPDATE || operation == Envelope.Operation.DELETE) {
             Integer eventType = null;
             Map<String, Object> result = new HashMap<>(4);
             if (operation == Envelope.Operation.CREATE) {
@@ -131,6 +137,15 @@ public class DebeziumUtil {
             }
             result.put(EVENT_TYPE, eventType);
             result.putAll(changeMap);
+            DebeziumModel.ChangeListenerModel model = new DebeziumModel.ChangeListenerModel();
+            model.setDb((String) changeMap.get(TableFieldName.db.name()));
+            model.setTable((String) changeMap.get(TableFieldName.table.name()));
+            Object timestamp = changeMap.get("changeTime");
+            model.setChangeTime(timestamp == null ? null : ((Number) timestamp).longValue());
+            model.setEventType(eventType);
+            model.setData((String) result.get(DATA));
+            model.setBeforeData((String) result.get(BEFORE_DATA));
+            return model;
         }
         return null;
     }
@@ -148,8 +163,8 @@ public class DebeziumUtil {
         Map<String, Object> afterMap = getChangeDataMap(sourceRecordChangeValue, AFTER);
         Map<String, Object> beforeMap = getChangeDataMap(sourceRecordChangeValue, BEFORE);
         //todo filter columns by table
-        resultMap.put(AFTER, JSON.toJSONString(afterMap));
-        resultMap.put(BEFORE, JSON.toJSONString(beforeMap));
+        resultMap.put(AFTER, CollectionUtils.isEmpty(afterMap) ? null : JSON.toJSONString(afterMap));
+        resultMap.put(BEFORE, CollectionUtils.isEmpty(beforeMap) ? null : JSON.toJSONString(beforeMap));
         return resultMap;
     }
 
@@ -202,6 +217,9 @@ public class DebeziumUtil {
      */
     public static Map<String, Object> getChangeDataMap(Struct sourceRecordChangeValue, String record) {
         Struct struct = (Struct) sourceRecordChangeValue.get(record);
+        if (struct == null) {
+            return Map.of();
+        }
         // Wrap the changed row as a Map
         return struct.schema().fields().stream()
                 .map(Field::name)
